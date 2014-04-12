@@ -3,27 +3,36 @@ package main
 import "fmt"
 import "time"
 
-func worker(id int, jobs <-chan int, results chan<- int) {
-	for j := range jobs {
-		fmt.Println("worker", id, "processing job", j)
+type task struct {
+	id     int
+	result int
+}
+
+func worker(id int, input <-chan task, output chan<- task) {
+	for t := range input {
+		fmt.Println("worker", id, "processing task", t.id)
+		t.result = t.id * 2
 		time.Sleep(time.Second)
-		results <- j * 2
+		output <- t
 	}
 }
+
 func main() {
 	tasks := 9
-	jobs := make(chan int, tasks)
-	results := make(chan int, tasks)
+	input := make(chan task, tasks)
+	output := make(chan task, tasks)
 
 	for w := 1; w <= 3; w++ {
-		go worker(w, jobs, results)
+		go worker(w, input, output)
 	}
 	for j := 1; j <= tasks; j++ {
-		jobs <- j
+		input <- task{id: j}
 	}
-	close(jobs)
+	close(input)
 
 	for a := 1; a <= tasks; a++ {
-		<-results
+		t := <-output
+		fmt.Println("task", t.id, "result", t.result)
 	}
+	close(output)
 }
