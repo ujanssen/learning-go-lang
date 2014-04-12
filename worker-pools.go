@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 import "time"
+import "flag"
 
 type task struct {
 	id int
@@ -18,7 +19,7 @@ func createChannels(num int) (chan task, chan result) {
 	return input, output
 }
 
-func worker(id int, input <-chan task, output chan<- result) {
+func doWork(id int, input <-chan task, output chan<- result) {
 	for t := range input {
 		fmt.Println("worker", id, "processing task", t)
 		time.Sleep(time.Second)
@@ -28,7 +29,7 @@ func worker(id int, input <-chan task, output chan<- result) {
 
 func createWorker(num int, input <-chan task, output chan<- result) {
 	for w := 1; w <= num; w++ {
-		go worker(w, input, output)
+		go doWork(w, input, output)
 	}
 }
 
@@ -46,12 +47,20 @@ func readResults(num int, output <-chan result) {
 	}
 }
 
+//go run worker-pools.go -worker=2 -tasks=20
+func getFromCommandLine(t int, w int) (int, int) {
+	numWorker := flag.Int("worker", w, "num worker")
+	numWTasks := flag.Int("tasks", t, "num tasks")
+	flag.Parse()
+	return *numWTasks, *numWorker
+}
+
 func main() {
-	tasks := 9
+	tasks, worker := getFromCommandLine(9, 3)
 	input, output := createChannels(tasks)
 
 	createTasks(tasks, input)
-	createWorker(3, input, output)
+	createWorker(worker, input, output)
 
 	readResults(tasks, output)
 }
