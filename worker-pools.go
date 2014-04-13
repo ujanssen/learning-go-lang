@@ -3,6 +3,7 @@ package main
 import "fmt"
 import "time"
 import "flag"
+import "runtime"
 
 type task struct {
 	id int
@@ -56,7 +57,7 @@ func getFromCommandLine(t int, w int) (int, int) {
 }
 
 func main() {
-	tasks, worker := getFromCommandLine(9, 3)
+	tasks, worker := getFromCommandLine(9, runtime.NumCPU())
 	input, output := createChannels(tasks)
 
 	createTasks(tasks, input)
