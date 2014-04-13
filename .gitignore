@@ -21,5 +21,4 @@ _testmain.go
 
 *.exe
 *.test
-imgage.png
-mandel.png
+*.png
