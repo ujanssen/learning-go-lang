@@ -13,7 +13,7 @@ func getRandomColor() color.RGBA {
 }
 
 func main() {
-	f, err := os.OpenFile("imgage.png", os.O_CREATE|os.O_WRONLY, 0666)
+	f, err := os.OpenFile("image.png", os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		panic(err)
 	}
