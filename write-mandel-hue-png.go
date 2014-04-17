@@ -12,46 +12,33 @@ import (
 
 func main() {
 	const maxIter = 10 * 360
+	var d = mandel.NewData(640, 400, -0.7435669, 0.1314023, 0.0022878)
 
-	const maxX = 600
-	const maxY = 480
-
-	var iteration [maxX][maxY]int
-
-	const centerRe, centerIm float64 = -0.7435669, 0.1314023
-	const hd float64 = 0.0022878
-	const hv float64 = float64(maxY) / float64(maxX) * hd
-
-	const hdStepX = hd / maxX
-	const hdStepY = hv / maxY
-
-	const upperLeftRe = centerRe - (float64(maxX/2) * hdStepX)
-	const upperLeftIm = centerIm - (float64(maxY/2) * hdStepY)
+	var iteration [640][400]int
 
 	fmt.Println("Iterate")
-	for y := 0; y < maxY; y++ {
-		for x := 0; x < maxX; x++ {
-			dx := float64(x) * hdStepX
-			dy := float64(y) * hdStepY
-			iteration[x][y] = mandel.Iterate(upperLeftRe+dx, upperLeftIm+dy, maxIter)
+	for y := 0; y < d.MaxY; y++ {
+		for x := 0; x < d.MaxX; x++ {
+			dx := float64(x) * d.StepX
+			dy := float64(y) * d.StepY
+			iteration[x][y] = mandel.Iterate(d.UpperLeftRe+dx, d.UpperLeftIm+dy, maxIter)
 		}
 	}
 
 	var f *os.File
 	var err error
 	var c color.Color
-	m := image.NewRGBA(image.Rect(0, 0, maxX, maxY))
-	b := m.Bounds()
+	m := image.NewRGBA(image.Rect(0, 0, d.MaxX, d.MaxY))
 	for colorShift := 0; colorShift < 36; colorShift++ {
-		for y := b.Min.Y; y < b.Max.Y; y++ {
-			for x := b.Min.X; x < b.Max.X; x++ {
+		for y := 0; y < d.MaxY; y++ {
+			for x := 0; x < d.MaxX; x++ {
 				iter := iteration[x][y]
 				h := float64((iter+colorShift*10)%360) / 360.0
 				if c, err = hue.Color(h); err != nil {
 					panic(err)
 				}
 
-				m.Set(x, maxY-y, c)
+				m.Set(x, d.MaxY-y, c)
 			}
 		}
 		n := fmt.Sprintf("mandel-hue-colorshift-%02d.png", colorShift)

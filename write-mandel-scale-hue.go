@@ -11,44 +11,30 @@ import (
 	"os"
 )
 
-var maxIter = 10 * 360
-
 func main() {
-	const maxX = 640
-	const maxY = 400
-
-	const centerRe, centerIm float64 = -0.7435669, 0.1314023
-	const hd float64 = 0.0022878
-	const hv float64 = float64(maxY) / float64(maxX) * hd
-
-	const hdStepX = hd / maxX
-	const hdStepY = hv / maxY
-
-	const upperLeftRe = centerRe - (float64(maxX/2) * hdStepX)
-	const upperLeftIm = centerIm - (float64(maxY/2) * hdStepY)
-
 	var c color.Color
+	var maxIter = 10 * 360
+	var d = mandel.NewData(640, 400, -0.7435669, 0.1314023, 0.0022878)
 
-	for colScale := 30; colScale < 360*2; colScale += 30 {
+	for colScale := 30; colScale < 120; colScale += 30 {
 		n := fmt.Sprintf("mandel-hue-%04d.png", colScale)
 		fmt.Println("Render n:", n)
 		f, err := os.Create(n)
 		if err != nil {
 			panic(err)
 		}
-		m := image.NewRGBA(image.Rect(0, 0, maxX, maxY))
-		b := m.Bounds()
-		for y := b.Min.Y; y < b.Max.Y; y++ {
-			for x := b.Min.X; x < b.Max.X; x++ {
-				dx := float64(x) * hdStepX
-				dy := float64(y) * hdStepY
-				iter := mandel.Iterate(upperLeftRe+dx, upperLeftIm+dy, maxIter)
+		m := image.NewRGBA(image.Rect(0, 0, d.MaxX, d.MaxY))
+		for y := 0; y < d.MaxY; y++ {
+			for x := 0; x < d.MaxX; x++ {
+				dx := float64(x) * d.StepX
+				dy := float64(y) * d.StepY
+				iter := mandel.Iterate(d.UpperLeftRe+dx, d.UpperLeftIm+dy, maxIter)
 				h := float64(iter) / float64(colScale)
 				h = h - math.Floor(h)
 				if c, err = hue.Color(h); err != nil {
 					panic(err)
 				}
-				m.Set(x, maxY-y, c)
+				m.Set(x, d.MaxY-y, c)
 			}
 		}
 
