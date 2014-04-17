@@ -13,7 +13,7 @@ type Config struct {
 
 func main() {
 	var conf Config
-	dat, err := ioutil.ReadFile("reading-files.conf")
+	dat, err := ioutil.ReadFile("read-json-config-file.conf")
 	if err != nil {
 		panic(err)
 	}

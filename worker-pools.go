@@ -5,6 +5,31 @@ import "time"
 import "flag"
 import "runtime"
 
+func main() {
+	tasks, worker := getFromCommandLine(20, runtime.NumCPU())
+	input, output := createChannels(tasks)
+
+	createTasks(tasks, input)
+	close(input)
+	createWorker(worker, input, output)
+
+	readResults(tasks, output)
+}
+
+func createWorker(num int, input <-chan task, output chan<- result) {
+	for w := 1; w <= num; w++ {
+		go doWork(w, input, output)
+	}
+}
+
+func doWork(id int, input <-chan task, output chan<- result) {
+	for t := range input {
+		fmt.Println("worker", id, "processing task", t)
+		time.Sleep(time.Second)
+		output <- result{task: t, result: t.id * 2}
+	}
+}
+
 type task struct {
 	id int
 }
@@ -20,25 +45,10 @@ func createChannels(num int) (chan task, chan result) {
 	return input, output
 }
 
-func doWork(id int, input <-chan task, output chan<- result) {
-	for t := range input {
-		fmt.Println("worker", id, "processing task", t)
-		time.Sleep(time.Second)
-		output <- result{task: t, result: t.id * 2}
-	}
-}
-
-func createWorker(num int, input <-chan task, output chan<- result) {
-	for w := 1; w <= num; w++ {
-		go doWork(w, input, output)
-	}
-}
-
 func createTasks(num int, input chan<- task) {
 	for id := 1; id <= num; id++ {
 		input <- task{id: id}
 	}
-	close(input)
 }
 
 func readResults(num int, output <-chan result) {
@@ -54,14 +64,4 @@ func getFromCommandLine(t int, w int) (int, int) {
 	numWTasks := flag.Int("tasks", t, "num tasks")
 	flag.Parse()
 	return *numWTasks, *numWorker
-}
-
-func main() {
-	tasks, worker := getFromCommandLine(9, runtime.NumCPU())
-	input, output := createChannels(tasks)
-
-	createTasks(tasks, input)
-	createWorker(worker, input, output)
-
-	readResults(tasks, output)
 }
