@@ -3,11 +3,9 @@ package main
 import (
 	"fmt"
 	"hue"
-	"image"
 	"image/color"
-	"image/png"
 	"mandel"
-	"os"
+	"pngimage"
 )
 
 func main() {
@@ -25,11 +23,12 @@ func main() {
 		}
 	}
 
-	var f *os.File
 	var err error
 	var c color.Color
-	m := image.NewRGBA(image.Rect(0, 0, d.MaxX, d.MaxY))
 	for colorShift := 0; colorShift < 36; colorShift++ {
+		n := fmt.Sprintf("mandel-hue-colorshift-%02d.png", colorShift)
+		pi := pngimage.NewPngimage(d.MaxX, d.MaxY, n)
+
 		for y := 0; y < d.MaxY; y++ {
 			for x := 0; x < d.MaxX; x++ {
 				iter := iteration[x][y]
@@ -38,17 +37,10 @@ func main() {
 					panic(err)
 				}
 
-				m.Set(x, d.MaxY-y, c)
+				pi.Img.Set(x, d.MaxY-y, c)
 			}
 		}
-		n := fmt.Sprintf("mandel-hue-colorshift-%02d.png", colorShift)
 		fmt.Println("write file", n)
-		f, err = os.Create(n)
-		if err != nil {
-			panic(err)
-		}
-		if err = png.Encode(f, m); err != nil {
-			panic(err)
-		}
+		pi.Save()
 	}
 }

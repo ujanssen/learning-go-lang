@@ -2,22 +2,17 @@ package main
 
 import (
 	"hue"
-	"image"
 	"image/color"
-	"image/png"
-	"os"
+	"pngimage"
 )
 
 func main() {
-	f, err := os.Create("hue.png")
-	if err != nil {
-		panic(err)
-	}
 	maxX := 3 * 360
-	m := image.NewRGBA(image.Rect(0, 0, maxX-1, 240))
+	pi := pngimage.NewPngimage(maxX-1, 240, "hue.png")
+	m := pi.Img
 	b := m.Bounds()
 	var c color.Color
-
+	var err error
 	for y := b.Min.Y; y < b.Max.Y; y++ {
 		for x := b.Min.X; x < b.Max.X; x++ {
 			if c, err = hue.Color(float64(x) / float64(maxX)); err != nil {
@@ -26,7 +21,5 @@ func main() {
 			m.Set(x, y, c)
 		}
 	}
-	if err = png.Encode(f, m); err != nil {
-		panic(err)
-	}
+	pi.Save()
 }
