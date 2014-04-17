@@ -1,4 +1,4 @@
-// Package the can convert a hue float value to a color.
+// Package hue can be used to convert a hue float value to a color.
 package hue
 
 import (
@@ -11,7 +11,7 @@ import (
 var segmentSize float64 = 1.0 / 6.0
 
 // Get color of a hue value.
-// The hue value must be >= 0.0 and < 1.0
+// The hue value must be >= 0.0 and < 1.0.
 func Color(hue float64) (color.Color, error) {
 	if hue < 0.0 || hue >= 1.0 {
 		errMsg := fmt.Sprintf("mandel.Color: arg hue float64 must be >= 0.0 and < 1.0, was %v", hue)
