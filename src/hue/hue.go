@@ -8,7 +8,7 @@ import (
 
 var (
 	max  float64 = 1.0
-	step float64 = max / 6
+	step float64 = max / 6.0
 )
 
 func Color(hue float64) color.RGBA {
