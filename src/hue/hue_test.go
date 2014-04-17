@@ -18,40 +18,54 @@ var (
 )
 
 func TestRed(t *testing.T) {
-	color := hue.Color(0 * step)
+	color, _ := hue.Color(0 * step)
 	if red != color {
 		t.Errorf("hue.Color(%v) = %v, want %v", 0*step, red, color)
 	}
 }
 func TestYellow(t *testing.T) {
-	color := hue.Color(1 * step)
+	color, _ := hue.Color(1 * step)
 	if yellow != color {
 		t.Errorf("hue.Color(%v) = %v, want %v", 1*step, yellow, color)
 	}
 }
 
 func TestGreen(t *testing.T) {
-	color := hue.Color(2 * step)
+	color, _ := hue.Color(2 * step)
 	if green != color {
 		t.Errorf("hue.Color(%v) = %v, want %v", 2*step, green, color)
 	}
 }
 func TestCyan(t *testing.T) {
-	color := hue.Color(3 * step)
+	color, _ := hue.Color(3 * step)
 	if cyan != color {
 		t.Errorf("hue.Color(%v) = %v, want %v", 3*step, cyan, color)
 	}
 }
 
 func TestBlue(t *testing.T) {
-	color := hue.Color(4 * step)
+	color, _ := hue.Color(4 * step)
 	if blue != color {
 		t.Errorf("hue.Color(%v) = %v, want %v", 4*step, blue, color)
 	}
 }
 func TestMagenta(t *testing.T) {
-	color := hue.Color(5 * step)
+	color, _ := hue.Color(5 * step)
 	if magenta != color {
 		t.Errorf("hue.Color(%v) = %v, want %v", 5*step, magenta, color)
+	}
+}
+
+func TestErrorNagative(t *testing.T) {
+	_, err := hue.Color(-0.1)
+	if err == nil {
+		t.Errorf("No error with hue = %v", -0.1)
+	}
+}
+
+func TestErrorPositive(t *testing.T) {
+	_, err := hue.Color(1.1)
+	if err == nil {
+		t.Errorf("No error with hue = %v", 1.1)
 	}
 }

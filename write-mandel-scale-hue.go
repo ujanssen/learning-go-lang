@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"hue"
 	"image"
+	"image/color"
 	"image/png"
 	"mandel"
 	"math"
@@ -26,6 +27,8 @@ func main() {
 	const upperLeftRe = centerRe - (float64(maxX/2) * hdStepX)
 	const upperLeftIm = centerIm - (float64(maxY/2) * hdStepY)
 
+	var c color.Color
+
 	for colScale := 30; colScale < 360*2; colScale += 30 {
 		n := fmt.Sprintf("mandel-hue-%04d.png", colScale)
 		fmt.Println("Render n:", n)
@@ -40,9 +43,12 @@ func main() {
 				dx := float64(x) * hdStepX
 				dy := float64(y) * hdStepY
 				iter := mandel.Iterate(upperLeftRe+dx, upperLeftIm+dy, maxIter)
-				c := float64(iter) / float64(colScale)
-				c = c - math.Floor(c)
-				m.Set(x, maxY-y, hue.Color(c))
+				h := float64(iter) / float64(colScale)
+				h = h - math.Floor(h)
+				if c, err = hue.Color(h); err != nil {
+					panic(err)
+				}
+				m.Set(x, maxY-y, c)
 			}
 		}
 

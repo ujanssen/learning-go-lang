@@ -1,6 +1,7 @@
 package hue
 
 import (
+	"errors"
 	"fmt"
 	"image/color"
 	"math"
@@ -11,9 +12,10 @@ var (
 	step float64 = max / 6.0
 )
 
-func Color(hue float64) color.RGBA {
+func Color(hue float64) (color.Color, error) {
 	if hue < 0.0 || hue >= max {
-		fmt.Println("Illegal hue value:", hue)
+		errMsg := fmt.Sprintf("mandel.Color: arg hue float64 must be >= 0.0 and < 1.0, was %v", hue)
+		return color.Black, errors.New(errMsg)
 	}
 	var r, g, b uint8
 
@@ -25,32 +27,26 @@ func Color(hue float64) color.RGBA {
 		r = 255
 		g = v
 		b = 0
-		return color.RGBA{r, g, b, 255}
 	case 1: // yellow->green 60->120
 		r = 255 - v
 		g = 255
 		b = 0
-		return color.RGBA{r, g, b, 255}
 	case 2: //green->cyan 120->180
 		r = 0
 		g = 255
 		b = v
-		return color.RGBA{r, g, b, 255}
 	case 3: // cyan->blue 180->240
 		r = 0
 		g = 255 - v
 		b = 255
-		return color.RGBA{r, g, b, 255}
 	case 4: // blue->magenta 240->300
 		r = v
 		g = 0
 		b = 255
-		return color.RGBA{r, g, b, 255}
 	case 5: //magenta->red 300->360
 		r = 255
 		g = 0
 		b = 255 - v
-		return color.RGBA{r, g, b, 255}
 	}
-	return color.RGBA{0, 0, 0, 255}
+	return color.RGBA{r, g, b, 255}, nil
 }

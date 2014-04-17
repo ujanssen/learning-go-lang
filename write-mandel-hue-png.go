@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"hue"
 	"image"
+	"image/color"
 	"image/png"
 	"mandel"
 	"os"
@@ -36,19 +37,26 @@ func main() {
 		}
 	}
 
+	var f *os.File
+	var err error
+	var c color.Color
 	m := image.NewRGBA(image.Rect(0, 0, maxX, maxY))
 	b := m.Bounds()
 	for colorShift := 0; colorShift < 36; colorShift++ {
 		for y := b.Min.Y; y < b.Max.Y; y++ {
 			for x := b.Min.X; x < b.Max.X; x++ {
 				iter := iteration[x][y]
-				c := hue.Color(float64((iter+colorShift*10)%360) / 360.0)
+				h := float64((iter+colorShift*10)%360) / 360.0
+				if c, err = hue.Color(h); err != nil {
+					panic(err)
+				}
+
 				m.Set(x, maxY-y, c)
 			}
 		}
 		n := fmt.Sprintf("mandel-hue-colorshift-%02d.png", colorShift)
 		fmt.Println("write file", n)
-		f, err := os.Create(n)
+		f, err = os.Create(n)
 		if err != nil {
 			panic(err)
 		}
