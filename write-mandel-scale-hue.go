@@ -26,9 +26,9 @@ func main() {
 		m := image.NewRGBA(image.Rect(0, 0, d.MaxX, d.MaxY))
 		for y := 0; y < d.MaxY; y++ {
 			for x := 0; x < d.MaxX; x++ {
-				dx := float64(x) * d.StepX
-				dy := float64(y) * d.StepY
-				iter := mandel.Iterate(d.UpperLeftRe+dx, d.UpperLeftIm+dy, maxIter)
+				cRe := d.UpperLeftRe + float64(x)*d.StepX
+				cIm := d.UpperLeftIm + float64(y)*d.StepY
+				iter := mandel.Iterate(cRe, cIm, maxIter)
 				h := float64(iter) / float64(colScale)
 				h = h - math.Floor(h)
 				if c, err = hue.Color(h); err != nil {
