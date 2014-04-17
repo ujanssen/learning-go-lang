@@ -18,7 +18,7 @@ func Color(hue float64) color.RGBA {
 	var r, g, b uint8
 
 	var part uint8 = uint8(math.Floor(hue / step))
-	var v = uint8(255.0 / step * (hue - float64(part)*step))
+	var v = uint8(math.Floor(255.0/step*(hue-float64(part)*step) + 0.5))
 
 	switch part {
 	case 0: // red->yellow 0->60
