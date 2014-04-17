@@ -1,3 +1,4 @@
+// Package the can convert a hue float value to a color.
 package hue
 
 import (
@@ -7,22 +8,21 @@ import (
 	"math"
 )
 
-var (
-	max  float64 = 1.0
-	step float64 = max / 6.0
-)
+var segmentSize float64 = 1.0 / 6.0
 
+// Get color of a hue value.
+// The hue value must be >= 0.0 and < 1.0
 func Color(hue float64) (color.Color, error) {
-	if hue < 0.0 || hue >= max {
+	if hue < 0.0 || hue >= 1.0 {
 		errMsg := fmt.Sprintf("mandel.Color: arg hue float64 must be >= 0.0 and < 1.0, was %v", hue)
 		return color.Black, errors.New(errMsg)
 	}
+
+	var segment = uint8(math.Floor(hue / segmentSize))
+	var v = uint8(math.Floor(0.5 + 255.0/segmentSize*(hue-float64(segment)*segmentSize)))
+
 	var r, g, b uint8
-
-	var part uint8 = uint8(math.Floor(hue / step))
-	var v = uint8(math.Floor(255.0/step*(hue-float64(part)*step) + 0.5))
-
-	switch part {
+	switch segment {
 	case 0: // red->yellow 0->60
 		r = 255
 		g = v
