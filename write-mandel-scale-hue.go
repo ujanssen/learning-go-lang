@@ -5,29 +5,10 @@ import (
 	"hue"
 	"image"
 	"image/png"
+	"mandel"
 	"math"
-	"math/cmplx"
 	"os"
 )
-
-func computeMandel(cx, cy float64) int {
-	var i int
-	var abs float64
-	var z, c complex128
-	c = complex(cx, cy)
-	for {
-		z = z*z + c
-		if i >= maxIter {
-			break
-		}
-		abs = cmplx.Abs(z)
-		if abs > 2.0 {
-			break
-		}
-		i = i + 1
-	}
-	return i
-}
 
 var maxIter = 10 * 360
 
@@ -58,7 +39,7 @@ func main() {
 			for x := b.Min.X; x < b.Max.X; x++ {
 				dx := float64(x) * hdStepX
 				dy := float64(y) * hdStepY
-				iter := computeMandel(upperLeftRe+dx, upperLeftIm+dy)
+				iter := mandel.Iterate(upperLeftRe+dx, upperLeftIm+dy, maxIter)
 				c := float64(iter) / float64(colScale)
 				c = c - math.Floor(c)
 				m.Set(x, maxY-y, hue.Color(c))

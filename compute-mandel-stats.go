@@ -2,29 +2,12 @@ package main
 
 import (
 	"fmt"
-	"math/cmplx"
+	"mandel"
 )
 
-const maxIter = 1024
-
-func computeMandel(cx, cy float64) int {
-	var i int
-	var z, c complex128
-	c = complex(cx, cy)
-	for {
-		i = i + 1
-		z = z*z + c
-		if i == maxIter {
-			break
-		}
-		if cmplx.Abs(z) > 2.0 {
-			break
-		}
-	}
-	return i
-}
-
 func main() {
+	const maxIter = 1024
+
 	const maxX = 320
 	const maxY = 200
 
@@ -45,7 +28,7 @@ func main() {
 		for x := 0; x < maxX; x++ {
 			dx := float64(x) * hdStepX
 			dy := float64(y) * hdStepY
-			iter := computeMandel(upperLeftRe+dx, upperLeftIm+dy)
+			iter := mandel.Iterate(upperLeftRe+dx, upperLeftIm+dy, maxIter)
 			m[iter] = m[iter] + 1
 			if m[iter] > maxV {
 				maxV = m[iter]

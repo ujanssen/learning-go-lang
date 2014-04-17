@@ -4,32 +4,13 @@ import (
 	"image"
 	"image/color"
 	"image/png"
-	"math/cmplx"
+	"mandel"
 	"os"
 )
 
 func getColor(c int) color.RGBA {
 	rgb := uint8(c % 255)
 	return color.RGBA{rgb, rgb, rgb, 255}
-}
-
-func computeMandel(cx, cy float64) color.RGBA {
-	var i int
-	var absq float64
-	var z, c complex128
-	c = complex(cx, cy)
-	for {
-		z = z*z + c
-		absq = cmplx.Abs(z)
-		if i >= 1024 {
-			return getColor(255)
-		}
-		if absq > 4.0 {
-			return getColor(i)
-		}
-		i = i + 1
-	}
-	return getColor(0)
 }
 
 func main() {
@@ -56,7 +37,8 @@ func main() {
 		for x := b.Min.X; x < b.Max.X; x++ {
 			dx := float64(x) * hdStepX
 			dy := float64(y) * hdStepY
-			c := computeMandel(upperLeftRe+dx, upperLeftIm+dy)
+			iter := mandel.Iterate(upperLeftRe+dx, upperLeftIm+dy, 1024)
+			c := getColor(iter)
 			m.Set(x, maxY-y, c)
 		}
 	}
