@@ -3,6 +3,14 @@ learning-go-lang
 
 Write some code to learn the go language
 
+Code
+====
+
+`read-json-config-file.go` : read a config file in json format
+
+`worker-pools.go` : read flags from command line and using go routines
+
+`write-random-png-image.go` : write a png image with random colors
 
 License
 =======
