@@ -30,3 +30,12 @@ func (pi *Pngimage) Save() {
 		panic(err)
 	}
 }
+
+func Each(f callback(x,y int))  {
+	for y := 0; y < d.MaxY; y++ {
+		for x := 0; x < d.MaxX; x++ {
+			callback(x,y)
+		}
+	}
+}
+
