@@ -4,6 +4,7 @@ import (
 	"image/color"
 	"mandel"
 	"pngimage"
+	"task"
 )
 
 func getColor(c int) color.RGBA {
@@ -14,16 +15,12 @@ func getColor(c int) color.RGBA {
 func main() {
 	d := mandel.NewData(1024, 800, -0.7435669, 0.1314023, 0.0022878)
 	pi := pngimage.NewPngimage(d.MaxX, d.MaxY, "mandel.png")
+	it := task.IterateTasks(d, pi)
 
-	pt := pi.PixelTasks()
-
-	for t := range pt {
-		dx := float64(t.X) * d.StepX
-		dy := float64(t.Y) * d.StepY
-		iter := mandel.Iterate(d.UpperLeftRe+dx, d.UpperLeftIm+dy, 1024)
+	for t := range it {
+		iter := mandel.Iterate(t.CRe, t.CIm, 1024)
 		c := getColor(iter)
 		pi.Img.Set(t.X, d.MaxY-t.Y, c)
 	}
-
 	pi.Save()
 }

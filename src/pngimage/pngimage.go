@@ -30,20 +30,3 @@ func (pi *Pngimage) Save() {
 		panic(err)
 	}
 }
-
-type PixelTask struct {
-	X, Y int
-}
-
-func (pi *Pngimage) PixelTasks() chan PixelTask {
-
-	b := pi.Img.Bounds()
-	input := make(chan PixelTask, b.Max.Y*b.Max.X)
-	for y := b.Min.Y; y < b.Max.Y; y++ {
-		for x := b.Min.X; x < b.Max.X; x++ {
-			input <- PixelTask{X: x, Y: y}
-		}
-	}
-	close(input)
-	return input
-}
