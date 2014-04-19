@@ -31,11 +31,19 @@ func (pi *Pngimage) Save() {
 	}
 }
 
-func Each(f callback(x,y int))  {
-	for y := 0; y < d.MaxY; y++ {
-		for x := 0; x < d.MaxX; x++ {
-			callback(x,y)
-		}
-	}
+type PixelTask struct {
+	X, Y int
 }
 
+func (pi *Pngimage) PixelTasks() chan PixelTask {
+
+	b := pi.Img.Bounds()
+	input := make(chan PixelTask, b.Max.Y*b.Max.X)
+	for y := b.Min.Y; y < b.Max.Y; y++ {
+		for x := b.Min.X; x < b.Max.X; x++ {
+			input <- PixelTask{X: x, Y: y}
+		}
+	}
+	close(input)
+	return input
+}
