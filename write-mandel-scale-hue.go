@@ -7,6 +7,7 @@ import (
 	"mandel"
 	"math"
 	"pngimage"
+	"task"
 )
 
 func main() {
@@ -18,21 +19,18 @@ func main() {
 	for colScale := 30; colScale < 120; colScale += 30 {
 
 		n := fmt.Sprintf("mandel-hue-%04d.png", colScale)
-		fmt.Println("Render n:", n)
+		fmt.Println("Render:", n)
 		pi := pngimage.NewPngimage(d.MaxX, d.MaxY, n)
+		it := task.IterateTasks(d, pi)
 
-		for y := 0; y < d.MaxY; y++ {
-			for x := 0; x < d.MaxX; x++ {
-				cRe := d.UpperLeftRe + float64(x)*d.StepX
-				cIm := d.UpperLeftIm + float64(y)*d.StepY
-				iter := mandel.Iterate(cRe, cIm, maxIter)
-				h := float64(iter) / float64(colScale)
-				h = h - math.Floor(h)
-				if c, err = hue.Color(h); err != nil {
-					panic(err)
-				}
-				pi.Img.Set(x, d.MaxY-y, c)
+		for t := range it {
+			iter := mandel.Iterate(t.CRe, t.CIm, maxIter)
+			h := float64(iter) / float64(colScale)
+			h = h - math.Floor(h)
+			if c, err = hue.Color(h); err != nil {
+				panic(err)
 			}
+			pi.Img.Set(t.X, d.MaxY-t.Y, c)
 		}
 		pi.Save()
 	}
