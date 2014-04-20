@@ -26,7 +26,7 @@ func main() {
 	var maxIter = 10 * 360
 	var d = mandel.NewData(640, 400, -0.7435669, 0.1314023, 0.0022878)
 
-	for colScale := 30; colScale < 120; colScale += 30 {
+	for colScale := 30; colScale < 360; colScale += 30 {
 		for colShift := 0; colShift < colScale; colShift += 6 {
 
 			n := fmt.Sprintf("mandel-scale-%04d-shift-%03d.png", colScale, colShift)
