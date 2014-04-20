@@ -23,3 +23,5 @@ _testmain.go
 *.test
 *.png
 .DS_Store
+.DS_Store
+mandel-scale-shift
