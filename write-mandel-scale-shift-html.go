@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 
+// produce a html page to show all mandelbrot set images
 // go run write-mandel-scale-shift-html.go > mandel-scale-shift/mandel-scale-shift.html
 func main() {
 	fmt.Println("<table>")

@@ -25,3 +25,4 @@ _testmain.go
 .DS_Store
 .DS_Store
 mandel-scale-shift
+write-mandel-subpixel
