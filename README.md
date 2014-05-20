@@ -4,7 +4,7 @@ learning-go-lang
 Write some code to learn the go language
 
 Code
-====
+----
 
 `read-json-config-file.go` : read a config file in json format
 
@@ -13,7 +13,7 @@ Code
 `write-random-png-image.go` : write a png image with random colors
 
 License
-=======
+-------
 
 The MIT License (MIT)
 
