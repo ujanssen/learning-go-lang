@@ -13,9 +13,13 @@ ok  	command-line-arguments	0.019s
 */
 
 func testFib(n, e int, t *testing.T) {
-	r := fibonacci.Fib(n)
-	if e != r {
-		t.Errorf("Fib(%v) = %v, want %v", n, r, e)
+	var r int
+
+	if n <= 20 {
+		r = fibonacci.Fib(n)
+		if e != r {
+			t.Errorf("Fib(%v) = %v, want %v", n, r, e)
+		}
 	}
 	r = fibonacci.Mfib(n)
 	if e != r {
@@ -27,16 +31,20 @@ func TestFib10(t *testing.T) {
 	testFib(10, 55, t)
 }
 
-func TestFib15(t *testing.T) {
-	testFib(15, 610, t)
-}
-
 func TestFib20(t *testing.T) {
 	testFib(20, 6765, t)
 }
 
-func TestFib25(t *testing.T) {
-	testFib(25, 75025, t)
+func TestFib30(t *testing.T) {
+	testFib(30, 832040, t)
+}
+
+func TestFib40(t *testing.T) {
+	testFib(40, 102334155, t)
+}
+
+func TestFib50(t *testing.T) {
+	testFib(50, 12586269025, t)
 }
 
 /*
