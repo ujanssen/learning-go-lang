@@ -65,48 +65,31 @@ func TestFib25(t *testing.T) {
 go test -bench=. src/fibonacci/fibonacci_test.go
 
 */
-func BenchmarkFib10(b *testing.B) {
-	// run the Fib function b.N times
+
+func benchmarkFib(i int, b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		fibonacci.Fib(10)
-	}
-}
-func BenchmarkFib15(b *testing.B) {
-	// run the Fib function b.N times
-	for n := 0; n < b.N; n++ {
-		fibonacci.Fib(15)
-	}
-}
-func BenchmarkFib20(b *testing.B) {
-	// run the Fib function b.N times
-	for n := 0; n < b.N; n++ {
-		fibonacci.Fib(20)
-	}
-}
-func BenchmarkFib25(b *testing.B) {
-	// run the Fib function b.N times
-	for n := 0; n < b.N; n++ {
-		fibonacci.Fib(25)
+		fibonacci.Fib(i)
 	}
 }
 
-func BenchmarkMfib10(b *testing.B) {
+func BenchmarkFib10(b *testing.B) { benchmarkFib(10, b) }
+func BenchmarkFib15(b *testing.B) { benchmarkFib(15, b) }
+func BenchmarkFib20(b *testing.B) { benchmarkFib(20, b) }
+func BenchmarkFib25(b *testing.B) { benchmarkFib(25, b) }
+func BenchmarkFib30(b *testing.B) { benchmarkFib(30, b) }
+func BenchmarkFib35(b *testing.B) { benchmarkFib(35, b) }
+func BenchmarkFib40(b *testing.B) { benchmarkFib(40, b) }
+
+func benchmarkMfib(i int, b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		fibonacci.Mfib(10)
+		fibonacci.Mfib(i)
 	}
 }
-func BenchmarkMfib15(b *testing.B) {
-	for n := 0; n < b.N; n++ {
-		fibonacci.Mfib(15)
-	}
-}
-func BenchmarkMfib20(b *testing.B) {
-	for n := 0; n < b.N; n++ {
-		fibonacci.Mfib(20)
-	}
-}
-func BenchmarkMfib25(b *testing.B) {
-	for n := 0; n < b.N; n++ {
-		fibonacci.Mfib(25)
-	}
-}
+
+func BenchmarkMfib10(b *testing.B) { benchmarkMfib(10, b) }
+func BenchmarkMfib15(b *testing.B) { benchmarkMfib(15, b) }
+func BenchmarkMfib20(b *testing.B) { benchmarkMfib(20, b) }
+func BenchmarkMfib25(b *testing.B) { benchmarkMfib(25, b) }
+func BenchmarkMfib30(b *testing.B) { benchmarkMfib(30, b) }
+func BenchmarkMfib35(b *testing.B) { benchmarkMfib(35, b) }
+func BenchmarkMfib40(b *testing.B) { benchmarkMfib(40, b) }
