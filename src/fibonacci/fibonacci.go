@@ -4,10 +4,8 @@ import (
 	"fmt"
 )
 
-// n: 50
-// fib: 12586269025
-//
-// real	1m21.730s
+var f [51]int
+
 func Fib(n int) int {
 	if n == 1 || n == 2 {
 		return 1
@@ -15,10 +13,6 @@ func Fib(n int) int {
 	return Fib(n-2) + Fib(n-1)
 }
 
-// n: 50
-// fmib: 12586269025
-//
-// real	0m0.279s
 func Mfib(n int) int {
 	if n == 1 || n == 2 {
 		f[n] = 1
@@ -30,12 +24,18 @@ func Mfib(n int) int {
 	return f[n-1] + f[n-2]
 }
 
-var f [51]int
+/*
 
-func main() {
-	n := 50
-	fmt.Println("n:", n)
-	//	fmt.Println("fib:", Fib(n))
+$ go test -bench=. src/fibonacci/fibonacci_test.go
+PASS
+BenchmarkFib10	 5000000	       348 ns/op
+BenchmarkFib15	  500000	      3896 ns/op
+BenchmarkFib20	   50000	     43294 ns/op
+BenchmarkFib25	    5000	    480761 ns/op
+BenchmarkMfib10	500000000	         5.66 ns/op
+BenchmarkMfib15	500000000	         5.31 ns/op
+BenchmarkMfib20	500000000	         5.67 ns/op
+BenchmarkMfib25	500000000	         5.29 ns/op
+ok  	command-line-arguments	22.353s
 
-	fmt.Println("fmib:", Mfib(n))
-}
+*/
