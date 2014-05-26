@@ -1,6 +1,6 @@
 package fibonacci
 
-var f [51]int
+var f [61]int
 
 func Fib(n int) int {
 	if n == 1 || n == 2 {

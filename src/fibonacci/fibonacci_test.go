@@ -60,11 +60,8 @@ func benchmarkFib(i int, b *testing.B) {
 }
 
 func BenchmarkFib10(b *testing.B) { benchmarkFib(10, b) }
-func BenchmarkFib15(b *testing.B) { benchmarkFib(15, b) }
 func BenchmarkFib20(b *testing.B) { benchmarkFib(20, b) }
-func BenchmarkFib25(b *testing.B) { benchmarkFib(25, b) }
 func BenchmarkFib30(b *testing.B) { benchmarkFib(30, b) }
-func BenchmarkFib35(b *testing.B) { benchmarkFib(35, b) }
 func BenchmarkFib40(b *testing.B) { benchmarkFib(40, b) }
 
 func benchmarkMfib(i int, b *testing.B) {
@@ -74,9 +71,6 @@ func benchmarkMfib(i int, b *testing.B) {
 }
 
 func BenchmarkMfib10(b *testing.B) { benchmarkMfib(10, b) }
-func BenchmarkMfib15(b *testing.B) { benchmarkMfib(15, b) }
 func BenchmarkMfib20(b *testing.B) { benchmarkMfib(20, b) }
-func BenchmarkMfib25(b *testing.B) { benchmarkMfib(25, b) }
 func BenchmarkMfib30(b *testing.B) { benchmarkMfib(30, b) }
-func BenchmarkMfib35(b *testing.B) { benchmarkMfib(35, b) }
 func BenchmarkMfib40(b *testing.B) { benchmarkMfib(40, b) }
