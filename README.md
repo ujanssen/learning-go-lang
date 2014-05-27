@@ -10,6 +10,8 @@ Code
 
 `worker-pools.go` : read flags from command line and using go routines
 
+`environment-variables.go` : read environment variables
+
 `write-random-png-image.go` : write a png image with random colors
 
 License
