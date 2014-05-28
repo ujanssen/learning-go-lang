@@ -14,6 +14,8 @@ Code
 
 `write-random-png-image.go` : write a png image with random colors
 
+`pping.go` : run a command with `exec.Command`
+
 License
 -------
 
