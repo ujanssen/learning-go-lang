@@ -17,10 +17,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("dat", dat)
+	fmt.Println("dat", string(dat))
 
 	if err = json.Unmarshal(dat, &conf); err != nil {
 		panic(err)
 	}
-	fmt.Println("conf", conf)
+	fmt.Println("conf: Worker ", conf.Worker)
+	fmt.Println("conf: Tasks  ", conf.Tasks)
 }
