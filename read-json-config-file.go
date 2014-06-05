@@ -7,8 +7,9 @@ import (
 )
 
 type Config struct {
-	Worker int `json:"worker"`
-	Tasks  int `json:"tasks"`
+	Worker int    `json:"worker"`
+	Tasks  int    `json:"tasks"`
+	Type   string `json:"type"`
 }
 
 func main() {
