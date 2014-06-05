@@ -25,4 +25,5 @@ func main() {
 	}
 	fmt.Println("conf: Worker ", conf.Worker)
 	fmt.Println("conf: Tasks  ", conf.Tasks)
+	fmt.Println("conf: Type   ", conf.Type)
 }
