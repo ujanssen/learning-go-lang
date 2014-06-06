@@ -7,12 +7,15 @@ import (
 	"log"
 )
 
+type DatabaseModel interface {
+	Filename() string
+}
 
 func filename(name string) string {
 	return  name + ".json"
 }
 
-func WriteDataToFile(data model.DatabaseModel) error {
+func WriteModelToFile(data DatabaseModel) error {
 	name := data.Filename()
 
 	log.Println("WriteDataToFile: ", data, filename(name))
@@ -25,7 +28,7 @@ func WriteDataToFile(data model.DatabaseModel) error {
 	return ioutil.WriteFile(filename(name), b, 0666)
 }
 
-func ReadDataFromFile(data model.DatabaseModel) error {
+func ReadModelFromFile(data DatabaseModel) error {
 	name := data.Filename()
 	log.Println("ReadDataFromFile: ", filename(name))
 
