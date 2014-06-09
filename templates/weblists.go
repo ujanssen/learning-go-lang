@@ -2,13 +2,15 @@ package main
 
 import (
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 )
 
 type Materials struct {
 	Material []string
+}
+type Templ struct {
+	Text string
 }
 
 func main() {
@@ -17,20 +19,15 @@ func main() {
 }
 
 func HandleMaterials(w http.ResponseWriter, req *http.Request) {
-	b, err := ioutil.ReadFile("weblists.html")
+
+	t, err := template.New("page").ParseFiles("weblists.html", "materials.html")
 	if err != nil {
 		panic(err)
 	}
 
-	templateStr := string(b)
 	materials := Materials{Material: []string{"gold", "uran", "wood"}}
 
-	tmpl, err := template.New("materials").Parse(templateStr)
-	if err != nil {
-		panic(err)
-	}
-
-	err = tmpl.Execute(w, materials)
+	err = t.ExecuteTemplate(w, "weblist", materials)
 	if err != nil {
 		panic(err)
 	}

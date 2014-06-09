@@ -1,8 +1,8 @@
+{{define "weblist"}}
 <html>
 <head><title>Materials</title></head>
 <body>
-The materials are:<ul>{{range .Material}}
-  <li>{{.}}</li>
-{{end}}</ul>
+{{template "materials" .Material}}
 </body>
 </html>
+{{end}}
