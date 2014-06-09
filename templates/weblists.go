@@ -27,7 +27,7 @@ func HandleMaterials(w http.ResponseWriter, req *http.Request) {
 
 	materials := Materials{Material: []string{"gold", "uran", "wood"}}
 
-	err = t.ExecuteTemplate(w, "weblist", materials)
+	err = t.ExecuteTemplate(w, "weblists.html", materials)
 	if err != nil {
 		panic(err)
 	}
