@@ -5,17 +5,17 @@ import (
 	"text/template"
 )
 
-type Inventory struct {
+type Materials struct {
 	Material []string
 }
 
 func main() {
-	sweaters := Inventory{Material: []string{"gold", "uran", "wood"}}
-	tmpl, err := template.New("test").Parse("The items are made of:\n{{range .Material}}- {{.}}\n{{end}}")
+	materials := Materials{Material: []string{"gold", "uran", "wood"}}
+	tmpl, err := template.New("materials").Parse("The materials are:\n{{range .Material}}- {{.}}\n{{end}}")
 	if err != nil {
 		panic(err)
 	}
-	err = tmpl.Execute(os.Stdout, sweaters)
+	err = tmpl.Execute(os.Stdout, materials)
 	if err != nil {
 		panic(err)
 	}
