@@ -2,6 +2,7 @@ package main
 
 import (
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -16,24 +17,21 @@ func main() {
 }
 
 func HandleMaterials(w http.ResponseWriter, req *http.Request) {
+	b, err := ioutil.ReadFile("weblists.html")
+	if err != nil {
+		panic(err)
+	}
+
+	templateStr := string(b)
 	materials := Materials{Material: []string{"gold", "uran", "wood"}}
+
 	tmpl, err := template.New("materials").Parse(templateStr)
 	if err != nil {
 		panic(err)
 	}
+
 	err = tmpl.Execute(w, materials)
 	if err != nil {
 		panic(err)
 	}
 }
-
-const templateStr = `
-<html>
-<head><title>Materials</title></head>
-<body>
-The materials are:<ul>{{range .Material}}
-  <li>{{.}}</li>
-{{end}}</ul>
-</body>
-</html>
-`
