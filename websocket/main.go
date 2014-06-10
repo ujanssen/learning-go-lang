@@ -45,7 +45,7 @@ func listen() {
 		log.Println("onConnected: ", ws)
 		go receive(ws)
 
-		websocket.JSON.Send(ws, Message{"nead", "body"})
+		websocket.JSON.Send(ws, Message{"hello", "client"})
 
 	}
 	http.Handle("/websocket", websocket.Handler(onConnected))
