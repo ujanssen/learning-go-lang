@@ -1,3 +1,3 @@
 $(document).ready(function() {
-	alert("start");
+	var ws = new WebSocket("ws://localhost:8044/websocket");
 });
