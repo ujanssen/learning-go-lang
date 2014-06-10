@@ -17,19 +17,6 @@ func (self *Message) String() string {
 	return self.Head + " with " + self.Body
 }
 
-func receive(ws *websocket.Conn) {
-	log.Println("Listening receiving from client")
-	var msg Message
-	err := websocket.JSON.Receive(ws, &msg)
-	if err == io.EOF {
-		log.Println("Receive io.EOF:", err)
-	} else if err != nil {
-		log.Println("Receive Error:", err, msg)
-	} else {
-		log.Println("Received: ", msg)
-	}
-}
-
 func listen() {
 	log.Println("Listening ws server on /websocket ...")
 
@@ -42,10 +29,25 @@ func listen() {
 			}
 		}()
 		log.Println("Created onConnected handler")
-		log.Println("onConnected: ", ws)
-		go receive(ws)
+		log.Printf("onConnected ws: %v\n", ws)
 
 		websocket.JSON.Send(ws, Message{"hello", "client"})
+		log.Println("Listening receiving from client")
+		for {
+			select {
+			default:
+
+				var msg Message
+				err := websocket.JSON.Receive(ws, &msg)
+				if err == io.EOF {
+					log.Println("Receive io.EOF:", err)
+				} else if err != nil {
+					log.Println("Receive Error:", err)
+				} else {
+					log.Println("Received: ", msg)
+				}
+			}
+		}
 
 	}
 	http.Handle("/websocket", websocket.Handler(onConnected))
