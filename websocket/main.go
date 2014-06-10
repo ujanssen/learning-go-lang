@@ -8,7 +8,7 @@ import (
 )
 
 func listen() {
-	log.Println("Listening server...")
+	log.Println("Listening ws server on /websocket ...")
 
 	// websocket handler
 	onConnected := func(ws *websocket.Conn) {
@@ -33,5 +33,7 @@ func main() {
 	// static files
 	http.Handle("/", http.FileServer(http.Dir("static")))
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Println("Listening web server on :8044 ...")
+
+	log.Fatal(http.ListenAndServe(":8044", nil))
 }
