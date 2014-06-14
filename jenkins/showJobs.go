@@ -20,31 +20,36 @@ type Jenkins struct {
 	Jobs            []JobState `json:"jobs"`
 }
 
+func responseBody(url string) ([]byte, error) {
+	response, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	contents, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+	return contents, nil
+}
+
 func main() {
 	jenkins := flag.String("jenkins", "127.0.0.1:8080", "Jenkins hostname")
 	flag.Parse()
 
-	response, err := http.Get("http://" + *jenkins + "/api/json?pretty=true")
+	contents, err := responseBody("http://" + *jenkins + "/api/json?pretty=true")
 	if err != nil {
 		fmt.Printf("%s", err)
 		os.Exit(1)
-	} else {
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
-		fmt.Printf("%s\n", string(contents))
-
-		var data Jenkins
-
-		err = json.Unmarshal(contents, &data)
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
-
-		fmt.Printf("%v", data.Jobs)
 	}
+	fmt.Printf("%s\n", string(contents))
+
+	var data Jenkins
+	err = json.Unmarshal(contents, &data)
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("%v", data.Jobs)
 }
