@@ -124,13 +124,22 @@ func main() {
 			fmt.Printf("%s", err)
 			os.Exit(1)
 		}
-		fmt.Println("Time:", time.Now())
+		now := time.Now()
+		start := time.Unix(int64(build.Timestamp/1000), 0)
+		estEnd := time.Unix(int64((build.Timestamp+build.EstimatedDuration)/1000), 0)
+
+		buildDuration := int(time.Since(start).Seconds())
+		buildCountdown := (build.EstimatedDuration / 1000) - buildDuration
+
+		fmt.Println("Time:", now)
 		fmt.Println("Number:", build.Number)
 		fmt.Println("Building:", build.Building)
 		fmt.Println("Timestamp:", build.Timestamp)
-		fmt.Println("Duration:", build.Duration)
-		fmt.Println("EstimatedDuration:", build.EstimatedDuration)
-		fmt.Println("Result:", build.Result)
+		fmt.Println("Start:", start)
+		fmt.Println("Build Duration: (s): ", buildDuration)
+		fmt.Println("Build Countdown (s): ", buildCountdown)
+		fmt.Println("Estimated End:", estEnd)
+		fmt.Println("Estimated Duration (s): ", build.EstimatedDuration/1000)
 		if !build.Building {
 			break
 		}
