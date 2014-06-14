@@ -25,20 +25,18 @@ func responseBody(url string) ([]byte, error) {
 }
 
 func JenkinsJob(jenkins, jobName *string) (Job, error) {
-	noJob := Job{}
-
 	url := "http://" + *jenkins + "/job/" + *jobName + "/api/json?pretty=true"
 	fmt.Printf("%s\n", url)
 	contents, err := responseBody(url)
 	if err != nil {
-		return noJob, err
+		return Job{}, err
 	}
-	fmt.Printf("%s\n", string(contents))
+	// fmt.Printf("%s\n", string(contents))
 
 	var data Job
 	err = json.Unmarshal(contents, &data)
 	if err != nil {
-		return noJob, err
+		return Job{}, err
 	}
 	return data, nil
 }
@@ -55,7 +53,7 @@ func JenkinsBuild(jenkins, jobName *string, buildNumber *int) (Build, error) {
 	if err != nil {
 		return build, err
 	}
-	fmt.Printf("%s\n", string(contents))
+	// fmt.Printf("%s\n", string(contents))
 
 	err = json.Unmarshal(contents, &build)
 	if err != nil {
@@ -101,7 +99,7 @@ func main() {
 	}
 	fmt.Printf("%s\n", url)
 
-	// InQueue
+	// while InQueue
 	for {
 		time.Sleep(time.Second)
 		job, err := JenkinsJob(jenkins, jobName)
@@ -111,29 +109,43 @@ func main() {
 		}
 		fmt.Println("Time:", time.Now())
 		fmt.Println("Name:", job.Name)
-		fmt.Println("URL:", job.URL)
-		fmt.Println("Color:", job.Color)
 		fmt.Println("InQueue:", job.InQueue)
 
 		if !job.InQueue {
 			break
 		}
 	}
+
+	// while Building
 	for {
+		time.Sleep(time.Second)
 		build, err := JenkinsBuild(jenkins, jobName, &buildNumber)
 		if err != nil {
 			fmt.Printf("%s", err)
 			os.Exit(1)
 		}
+		fmt.Println("Time:", time.Now())
 		fmt.Println("Number:", build.Number)
-		fmt.Println("URL:", build.URL)
 		fmt.Println("Building:", build.Building)
 		fmt.Println("Timestamp:", build.Timestamp)
 		fmt.Println("Duration:", build.Duration)
 		fmt.Println("EstimatedDuration:", build.EstimatedDuration)
 		fmt.Println("Result:", build.Result)
-		if len(build.Result) > 0 {
+		if !build.Building {
 			break
 		}
 	}
+
+	build, err := JenkinsBuild(jenkins, jobName, &buildNumber)
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	}
+	fmt.Println("Time:", time.Now())
+	fmt.Println("Number:", build.Number)
+	fmt.Println("Building:", build.Building)
+	fmt.Println("Timestamp:", build.Timestamp)
+	fmt.Println("Duration:", build.Duration)
+	fmt.Println("EstimatedDuration:", build.EstimatedDuration)
+	fmt.Println("Result:", build.Result)
 }
