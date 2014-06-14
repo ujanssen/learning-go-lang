@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -48,8 +47,8 @@ func JenkinsJobs(jenkins *string) ([]JobState, error) {
 	}
 	return data.Jobs, nil
 }
-func JenkinsJob(jenkins, jobName *string) (JobState, error) {
-	noJob := JobState{}
+func JenkinsJob(jenkins, jobName *string) (Job, error) {
+	noJob := Job{}
 
 	url := "http://" + *jenkins + "/job/" + *jobName + "/api/json?pretty=true"
 	fmt.Printf("%s\n", url)
@@ -59,14 +58,27 @@ func JenkinsJob(jenkins, jobName *string) (JobState, error) {
 	}
 	fmt.Printf("%s\n", string(contents))
 
-	// var data Jenkins
-	// err = json.Unmarshal(contents, &data)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// return data.Jobs, nil
-	return noJob, errors.New("Job not found.")
+	var data Job
+	err = json.Unmarshal(contents, &data)
+	if err != nil {
+		return noJob, err
+	}
+	return data, nil
 }
+
+type Build struct {
+	Number int    `json:"number"`
+	URL    string `json:"url"`
+}
+
+type Job struct {
+	Name      string `json:"name"`
+	URL       string `json:"url"`
+	Color     string `json:"color"`
+	InQueue   bool   `json:"inQueue"`
+	LastBuild Build  `json:"lastBuild"`
+}
+
 func main() {
 	jenkins := flag.String("jenkins", "127.0.0.1:8080", "Jenkins hostname")
 	jobName := flag.String("jobName", "test", "Jenkins job name")
@@ -77,5 +89,10 @@ func main() {
 		fmt.Printf("%s", err)
 		os.Exit(1)
 	}
-	fmt.Printf("Name: %s, URL: %s, Color: %s\n", job.Name, job.URL, job.Color)
+	fmt.Println("Name:", job.Name)
+	fmt.Println("URL:", job.URL)
+	fmt.Println("Color:", job.Color)
+	fmt.Println("InQueue:", job.InQueue)
+	fmt.Println("LastBuild number:", job.LastBuild.Number)
+	fmt.Println("LastBuild URL:", job.LastBuild.URL)
 }
