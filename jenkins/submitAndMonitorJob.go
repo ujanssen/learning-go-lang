@@ -31,7 +31,7 @@ func JenkinsJob(jenkins, jobName *string) (Job, error) {
 	if err != nil {
 		return Job{}, err
 	}
-	// fmt.Printf("%s\n", string(contents))
+	fmt.Printf("%s\n", string(contents))
 
 	var data Job
 	err = json.Unmarshal(contents, &data)
@@ -85,6 +85,7 @@ func main() {
 	jobName := flag.String("jobName", "test", "Jenkins job name")
 	flag.Parse()
 
+	// Ask for the next build number
 	job, err := JenkinsJob(jenkins, jobName)
 	if err != nil {
 		panic(err)
@@ -92,6 +93,7 @@ func main() {
 	fmt.Printf("job.NextBuildNumber: %d\n", job.NextBuildNumber)
 	buildNumber := job.NextBuildNumber
 
+	// Start build
 	url := "http://" + *jenkins + "/job/" + *jobName + "/build"
 	_, err = http.Post(url, "", nil)
 	if err != nil {
@@ -99,7 +101,7 @@ func main() {
 	}
 	fmt.Printf("%s\n", url)
 
-	// while InQueue
+	// query /job while InQueue
 	for {
 		time.Sleep(time.Second)
 		job, err := JenkinsJob(jenkins, jobName)
@@ -116,7 +118,7 @@ func main() {
 		}
 	}
 
-	// while Building
+	// query /job/{{buildNo}} while Building
 	for {
 		time.Sleep(time.Second)
 		build, err := JenkinsBuild(jenkins, jobName, &buildNumber)
@@ -145,6 +147,7 @@ func main() {
 		}
 	}
 
+	// show build result
 	build, err := JenkinsBuild(jenkins, jobName, &buildNumber)
 	if err != nil {
 		fmt.Printf("%s", err)

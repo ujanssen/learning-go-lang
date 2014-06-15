@@ -9,17 +9,6 @@ import (
 	"os"
 )
 
-type JobState struct {
-	Name  string `json:"name"`
-	URL   string `json:"url"`
-	Color string `json:"color"`
-}
-
-type Jenkins struct {
-	NodeDescription string     `json:"nodeDescription"`
-	Jobs            []JobState `json:"jobs"`
-}
-
 func responseBody(url string) ([]byte, error) {
 	response, err := http.Get(url)
 	if err != nil {
@@ -33,20 +22,6 @@ func responseBody(url string) ([]byte, error) {
 	return contents, nil
 }
 
-func JenkinsJobs(jenkins *string) ([]JobState, error) {
-	contents, err := responseBody("http://" + *jenkins + "/api/json?pretty=true")
-	if err != nil {
-		return nil, err
-	}
-	fmt.Printf("%s\n", string(contents))
-
-	var data Jenkins
-	err = json.Unmarshal(contents, &data)
-	if err != nil {
-		return nil, err
-	}
-	return data.Jobs, nil
-}
 func JenkinsJob(jenkins, jobName *string) (Job, error) {
 	noJob := Job{}
 
