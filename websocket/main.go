@@ -31,7 +31,7 @@ func listen() {
 		log.Println("Created onConnected handler")
 		log.Printf("onConnected ws: %v\n", ws)
 
-		websocket.JSON.Send(ws, Message{"hello", "client"})
+		//		websocket.JSON.Send(ws, Message{"hello", "client"})
 		log.Println("Listening receiving from client")
 		for {
 			select {
@@ -45,7 +45,10 @@ func listen() {
 				} else if err != nil {
 					log.Println("Receive Error:", err)
 				} else {
-					log.Println("Received: ", msg)
+					log.Println("Received: ", msg.String())
+					if msg.Head == "ping" {
+						websocket.JSON.Send(ws, Message{"pong", "pong"})
+					}
 				}
 			}
 		}
