@@ -16,11 +16,20 @@ var controller = {
 		controller.ws.send(JSON.stringify(msg));
 	},
 
+	disconnectServer: function() {
+		controller.ws.close();		
+		$("#onmessage").empty();
+		$("#onerror").empty();
+		$("#onopen").empty();
+		$("#onclose").empty();
+	},
+
 	connectToServer: function() {
 		console.log("connectToServer")
 		controller.ws = new WebSocket("ws://localhost:8044/websocket");
 		controller.ws.onmessage = function(e) {
-			$("#onmessage").append($("<li>").text(JSON.stringify(e)));
+			var msg = JSON.parse(e.data)
+			$("#onmessage").append($("<li>").text(msg.head +" - "+ msg.body));
 		};
 		controller.ws.onopen = function(e) {
 			$("#onopen").append($("<li>").text(JSON.stringify(e)));
@@ -42,9 +51,14 @@ var controller = {
 	setConnectButton: function() {
 		$('#connect-button').click(function(){controller.connectToServer()});
 	},
+
+	setDisconnectButton: function() {
+		$('#disconnect-button').click(function(){controller.disconnectServer()});
+	},
 };
 
 $(document).ready(function() {
+	controller.setDisconnectButton();
 	controller.setConnectButton();
 	controller.setPingButton();
 });

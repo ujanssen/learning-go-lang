@@ -40,7 +40,7 @@ func listen() {
 				var msg Message
 				err := websocket.JSON.Receive(ws, &msg)
 				if err == io.EOF {
-					log.Println("Receive io.EOF:", err)
+					log.Println("Connection closed:", err)
 					return
 				} else if err != nil {
 					log.Println("Receive Error:", err)
