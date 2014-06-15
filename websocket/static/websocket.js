@@ -23,6 +23,15 @@ var controller = {
 		$("#onopen").empty();
 		$("#onclose").empty();
 	},
+	checkConnection: function() {
+		setTimeout(function() { 
+			controller.checkConnection();
+		}, 1000);
+
+		if(typeof controller.ws.readyState == "undefined"){
+			console.log("no ready state");
+		}
+	},
 
 	connectToServer: function() {
 		console.log("connectToServer")
@@ -61,4 +70,7 @@ $(document).ready(function() {
 	controller.setDisconnectButton();
 	controller.setConnectButton();
 	controller.setPingButton();
+
+	controller.checkConnection();
+
 });
