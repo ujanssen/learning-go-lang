@@ -30,6 +30,7 @@ var controller = {
 
 		if(typeof controller.ws.readyState == "undefined"){
 			console.log("no ready state");
+			controller.connectToServer();
 		}
 	},
 
