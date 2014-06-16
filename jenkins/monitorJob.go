@@ -31,7 +31,7 @@ func JenkinsJob(jenkins, jobName *string) (Job, error) {
 	if err != nil {
 		return Job{}, err
 	}
-	fmt.Printf("%s\n", string(contents))
+	// fmt.Printf("%s\n", string(contents))
 
 	var data Job
 	err = json.Unmarshal(contents, &data)
@@ -93,6 +93,7 @@ func main() {
 
 	for {
 		// query /job while InQueue
+		// set buildNumber
 		for {
 			time.Sleep(time.Second)
 			job, err := JenkinsJob(jenkins, jobName)
@@ -126,9 +127,7 @@ func main() {
 			buildCountdown := (build.EstimatedDuration / 1000) - buildDuration
 
 			fmt.Println("Time:", now)
-			fmt.Println("Number:", build.Number)
 			fmt.Println("Building:", build.Building)
-			fmt.Println("Timestamp:", build.Timestamp)
 			fmt.Println("Start:", start)
 			fmt.Println("Build Duration: (s): ", buildDuration)
 			fmt.Println("Build Countdown (s): ", buildCountdown)
@@ -147,10 +146,7 @@ func main() {
 		}
 		fmt.Println("Time:", time.Now())
 		fmt.Println("Number:", build.Number)
-		fmt.Println("Building:", build.Building)
-		fmt.Println("Timestamp:", build.Timestamp)
 		fmt.Println("Duration:", build.Duration)
-		fmt.Println("EstimatedDuration:", build.EstimatedDuration)
 		fmt.Println("Result:", build.Result)
 	}
 }
