@@ -150,12 +150,18 @@ func main() {
 	jenkins := flag.String("jenkins", "127.0.0.1:8080", "Jenkins hostname")
 	jobName := flag.String("jobName", "test", "Jenkins job name")
 	flag.Parse()
+	oldState := JenkinsJobState(jenkins, jobName)
+	fmt.Println("Time:", time.Now())
+	fmt.Println("oldState:", oldState)
 	for {
-		state := JenkinsJobState(jenkins, jobName)
-		fmt.Println("Time:", time.Now())
-		fmt.Println("state:", state)
 		time.Sleep(time.Second)
-		fmt.Printf("\n\n")
+		newState := JenkinsJobState(jenkins, jobName)
+		if newState.JobState != oldState.JobState || newState.JobState == Building {
+			fmt.Println("Time:", time.Now())
+			fmt.Println("newState:", newState)
+			fmt.Printf("\n\n")
+		}
+		oldState = newState
 	}
 
 }
