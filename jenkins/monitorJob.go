@@ -24,7 +24,7 @@ func responseBody(url string) ([]byte, error) {
 	return contents, nil
 }
 
-func JenkinsJob(jenkins, jobName *string) (Job, error) {
+func JenkinsJobData(jenkins, jobName *string) (Job, error) {
 	url := "http://" + *jenkins + "/job/" + *jobName + "/api/json?pretty=true"
 	fmt.Printf("%s\n", url)
 	contents, err := responseBody(url)
@@ -85,68 +85,83 @@ type Build struct {
 	Building          bool   `json:"building"`
 }
 
+type JobState string
+
+const (
+	Unknown  JobState = "Unknown" // no contact to jenkins
+	InQueue  JobState = "InQueue"
+	Building JobState = "Building"
+	Finished JobState = "Finished"
+)
+
+type JenkinsJob struct {
+	Name     string   `json:"name"`
+	JobState JobState `json:"state"`
+}
+
+func JenkinsJobState(jenkins, jobName *string) JenkinsJob {
+	jenkinsJob := JenkinsJob{Name: *jobName}
+	var buildNumber int
+
+	// query /job while InQueue
+	// set buildNumber
+	time.Sleep(time.Second)
+	job, err := JenkinsJobData(jenkins, jobName)
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	}
+	fmt.Println("Time:", time.Now())
+	fmt.Println("Name:", job.Name)
+	fmt.Println("InQueue:", job.InQueue)
+
+	if job.InQueue {
+		jenkinsJob.JobState = InQueue
+		return jenkinsJob
+	} else {
+		buildNumber = job.LastBuild.Number
+	}
+
+	// query /job/{{buildNo}} while Building
+	build, err := JenkinsBuild(jenkins, jobName, &buildNumber)
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	}
+	start := time.Unix(int64(build.Timestamp/1000), 0)
+	estEnd := time.Unix(int64((build.Timestamp+build.EstimatedDuration)/1000), 0)
+
+	buildDuration := int(time.Since(start).Seconds())
+	buildCountdown := (build.EstimatedDuration / 1000) - buildDuration
+
+	fmt.Println("Building:", build.Building)
+	fmt.Println("Start:", start)
+	fmt.Println("Build Duration: (s): ", buildDuration)
+	fmt.Println("Build Countdown (s): ", buildCountdown)
+	fmt.Println("Estimated End:", estEnd)
+	fmt.Println("Estimated Duration (s): ", build.EstimatedDuration/1000)
+	if build.Building {
+		jenkinsJob.JobState = Building
+		return jenkinsJob
+	}
+
+	// show build result
+	fmt.Println("Number:", build.Number)
+	fmt.Println("Duration:", build.Duration)
+	fmt.Println("Result:", build.Result)
+	jenkinsJob.JobState = Finished
+	return jenkinsJob
+}
+
 func main() {
 	jenkins := flag.String("jenkins", "127.0.0.1:8080", "Jenkins hostname")
 	jobName := flag.String("jobName", "test", "Jenkins job name")
 	flag.Parse()
-	var buildNumber int
-
 	for {
-		// query /job while InQueue
-		// set buildNumber
-		for {
-			time.Sleep(time.Second)
-			job, err := JenkinsJob(jenkins, jobName)
-			if err != nil {
-				fmt.Printf("%s", err)
-				os.Exit(1)
-			}
-			fmt.Println("Time:", time.Now())
-			fmt.Println("Name:", job.Name)
-			fmt.Println("InQueue:", job.InQueue)
-
-			if !job.InQueue {
-				buildNumber = job.LastBuild.Number
-				break
-			}
-		}
-
-		// query /job/{{buildNo}} while Building
-		for {
-			time.Sleep(time.Second)
-			build, err := JenkinsBuild(jenkins, jobName, &buildNumber)
-			if err != nil {
-				fmt.Printf("%s", err)
-				os.Exit(1)
-			}
-			now := time.Now()
-			start := time.Unix(int64(build.Timestamp/1000), 0)
-			estEnd := time.Unix(int64((build.Timestamp+build.EstimatedDuration)/1000), 0)
-
-			buildDuration := int(time.Since(start).Seconds())
-			buildCountdown := (build.EstimatedDuration / 1000) - buildDuration
-
-			fmt.Println("Time:", now)
-			fmt.Println("Building:", build.Building)
-			fmt.Println("Start:", start)
-			fmt.Println("Build Duration: (s): ", buildDuration)
-			fmt.Println("Build Countdown (s): ", buildCountdown)
-			fmt.Println("Estimated End:", estEnd)
-			fmt.Println("Estimated Duration (s): ", build.EstimatedDuration/1000)
-			if !build.Building {
-				break
-			}
-		}
-
-		// show build result
-		build, err := JenkinsBuild(jenkins, jobName, &buildNumber)
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
+		state := JenkinsJobState(jenkins, jobName)
 		fmt.Println("Time:", time.Now())
-		fmt.Println("Number:", build.Number)
-		fmt.Println("Duration:", build.Duration)
-		fmt.Println("Result:", build.Result)
+		fmt.Println("state:", state)
+		time.Sleep(time.Second)
 	}
+
 }
