@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 )
@@ -18,15 +17,12 @@ func responseBody(url string) ([]byte, error) {
 	}
 	defer response.Body.Close()
 	contents, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return nil, err
-	}
 	return contents, nil
 }
 
 func JenkinsJobData(jenkins, jobName *string) (Job, error) {
 	url := "http://" + *jenkins + "/job/" + *jobName + "/api/json?pretty=true"
-	fmt.Printf("%s\n", url)
+	// fmt.Printf("%s\n", url)
 	contents, err := responseBody(url)
 	if err != nil {
 		return Job{}, err
@@ -48,7 +44,7 @@ func JenkinsBuild(jenkins, jobName *string, buildNumber *int) (Build, error) {
 		"/job/" + *jobName + "/" +
 		strconv.Itoa(*buildNumber) + "/api/json?pretty=true"
 
-	fmt.Printf("%s\n", url)
+	// fmt.Printf("%s\n", url)
 	contents, err := responseBody(url)
 	if err != nil {
 		return build, err
@@ -105,14 +101,12 @@ func JenkinsJobState(jenkins, jobName *string) JenkinsJob {
 
 	// query /job while InQueue
 	// set buildNumber
-	time.Sleep(time.Second)
 	job, err := JenkinsJobData(jenkins, jobName)
 	if err != nil {
 		fmt.Printf("%s", err)
-		os.Exit(1)
+		jenkinsJob.JobState = Unknown
+		return jenkinsJob
 	}
-	fmt.Println("Time:", time.Now())
-	fmt.Println("Name:", job.Name)
 	fmt.Println("InQueue:", job.InQueue)
 
 	if job.InQueue {
@@ -122,34 +116,33 @@ func JenkinsJobState(jenkins, jobName *string) JenkinsJob {
 		buildNumber = job.LastBuild.Number
 	}
 
-	// query /job/{{buildNo}} while Building
+	// query /job/{{buildNo}} for Building
 	build, err := JenkinsBuild(jenkins, jobName, &buildNumber)
 	if err != nil {
 		fmt.Printf("%s", err)
-		os.Exit(1)
-	}
-	start := time.Unix(int64(build.Timestamp/1000), 0)
-	estEnd := time.Unix(int64((build.Timestamp+build.EstimatedDuration)/1000), 0)
-
-	buildDuration := int(time.Since(start).Seconds())
-	buildCountdown := (build.EstimatedDuration / 1000) - buildDuration
-
-	fmt.Println("Building:", build.Building)
-	fmt.Println("Start:", start)
-	fmt.Println("Build Duration: (s): ", buildDuration)
-	fmt.Println("Build Countdown (s): ", buildCountdown)
-	fmt.Println("Estimated End:", estEnd)
-	fmt.Println("Estimated Duration (s): ", build.EstimatedDuration/1000)
-	if build.Building {
-		jenkinsJob.JobState = Building
+		jenkinsJob.JobState = Unknown
 		return jenkinsJob
 	}
+	if build.Building {
+		start := time.Unix(int64(build.Timestamp/1000), 0)
+		estEnd := time.Unix(int64((build.Timestamp+build.EstimatedDuration)/1000), 0)
 
-	// show build result
-	fmt.Println("Number:", build.Number)
-	fmt.Println("Duration:", build.Duration)
-	fmt.Println("Result:", build.Result)
-	jenkinsJob.JobState = Finished
+		buildDuration := int(time.Since(start).Seconds())
+		buildCountdown := (build.EstimatedDuration / 1000) - buildDuration
+
+		fmt.Println("Building:", build.Building)
+		fmt.Println("Start:", start)
+		fmt.Println("Build Duration: (s): ", buildDuration)
+		fmt.Println("Build Countdown (s): ", buildCountdown)
+		fmt.Println("Estimated End:", estEnd)
+		fmt.Println("Estimated Duration (s): ", build.EstimatedDuration/1000)
+		jenkinsJob.JobState = Building
+	} else {
+		// show build result
+		fmt.Println("Duration:", build.Duration)
+		fmt.Println("Result:", build.Result)
+		jenkinsJob.JobState = Finished
+	}
 	return jenkinsJob
 }
 
@@ -162,6 +155,7 @@ func main() {
 		fmt.Println("Time:", time.Now())
 		fmt.Println("state:", state)
 		time.Sleep(time.Second)
+		fmt.Printf("\n\n")
 	}
 
 }
