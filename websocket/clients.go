@@ -1,11 +1,11 @@
 package main
 
 import (
+	"code.google.com/p/go.net/websocket"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
-
-	"code.google.com/p/go.net/websocket"
 )
 
 type Message struct {
@@ -24,6 +24,9 @@ type Client struct {
 	ch     chan *Message
 	doneCh chan bool
 }
+
+var maxId int = 0
+var channelBufSize int = 19
 
 func NewClient(ws *websocket.Conn, server *Server) *Client {
 
@@ -233,7 +236,7 @@ func (s *Server) Listen() {
 func main() {
 
 	// websocket server
-	server := chat.NewServer("/websocket")
+	server := NewServer("/websocket")
 	go server.Listen()
 
 	// static files
