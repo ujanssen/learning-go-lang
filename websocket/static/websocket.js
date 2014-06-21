@@ -9,7 +9,7 @@ var controller = {
 			return;
 		}
 		var msg = {
-			head: "ping",
+			head: "reqest",
 			body: "ping",
 		};
 		console.log("send: " + JSON.stringify(msg))

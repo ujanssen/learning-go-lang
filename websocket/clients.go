@@ -207,9 +207,11 @@ func (s *Server) Listen() {
 		case c := <-s.delCh:
 			log.Println("Delete client")
 			delete(s.clients, c.id)
+			log.Println("Now", len(s.clients), "clients connected.")
 
 		// broadcast message for all clients
 		case msg := <-s.sendAllCh:
+			msg.Head = "response"
 			log.Println("Send all:", msg)
 			s.sendAll(msg)
 
