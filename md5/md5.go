@@ -1,4 +1,4 @@
-package main
+package md5
 
 import (
 	"crypto/md5"
@@ -6,11 +6,9 @@ import (
 	"io"
 )
 
-func main() {
-	empty := "d41d8cd98f00b204e9800998ecf8427e"
+func Hash(input string) string {
 	h := md5.New()
-	io.WriteString(h, "")
+	io.WriteString(h, input)
 	md5Sum := h.Sum(nil)
-	fmt.Printf("empty  %s\n", empty)
-	fmt.Printf("md5Sum %x\n", md5Sum)
+	return fmt.Sprintf("%x", md5Sum)
 }
