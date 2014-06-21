@@ -11,12 +11,14 @@ func testMd5(in, want string, t *testing.T) {
 	}
 }
 
+const text string = " jagt im komplett verwahrlosten Taxi quer durch Bayern"
+
 func TestFranz(t *testing.T) {
-	testMd5("Franz jagt im komplett verwahrlosten Taxi quer durch Bayern", "a3cca2b2aa1e3b5b3b5aad99a8529074", t)
+	testMd5("Franz"+text, "a3cca2b2aa1e3b5b3b5aad99a8529074", t)
 }
 
 func TestFrank(t *testing.T) {
-	testMd5("Frank jagt im komplett verwahrlosten Taxi quer durch Bayern", "7e716d0e702df0505fc72e2b89467910", t)
+	testMd5("Frank"+text, "7e716d0e702df0505fc72e2b89467910", t)
 }
 
 func TestEmpty(t *testing.T) {
