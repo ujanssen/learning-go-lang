@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"time"
 	"unicode/utf16"
 )
 
@@ -31,6 +32,73 @@ func main() {
 	var s SessionInfo = BoxSessionInfo()
 	var l SessionInfo = BoxLogin(password, username, s.Challenge)
 	fmt.Printf("SID -> %v\n", l.SID)
+
+	// get ain
+	values := url.Values{}
+	values.Set("switchcmd", "getswitchlist")
+	values.Set("sid", l.SID)
+	response, err := http.Get("http://fritz/webservices/homeautoswitch.lua?" + values.Encode())
+	fmt.Printf("values -> %v\n", values)
+
+	var ain string
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	} else {
+		defer response.Body.Close()
+		contents, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Printf("%s", err)
+			os.Exit(1)
+		}
+		ain = string(contents)
+		ain = ain[0 : len(ain)-1]
+		fmt.Printf("ain: %s\n", ain)
+	}
+
+	// set switch on
+	values = url.Values{}
+	values.Set("ain", ain)
+	values.Set("switchcmd", "setswitchon")
+	values.Set("sid", l.SID)
+	response, err = http.Get("http://fritz/webservices/homeautoswitch.lua?" + values.Encode())
+	fmt.Printf("values -> %v\n", values)
+
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	} else {
+		defer response.Body.Close()
+		contents, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Printf("%s", err)
+			os.Exit(1)
+		}
+		fmt.Printf("state: %s\n", string(contents))
+	}
+
+	time.Sleep(time.Second)
+
+	// set switch off
+	values = url.Values{}
+	values.Set("ain", ain)
+	values.Set("switchcmd", "setswitchoff")
+	values.Set("sid", l.SID)
+	response, err = http.Get("http://fritz/webservices/homeautoswitch.lua?" + values.Encode())
+	fmt.Printf("values -> %v\n", values)
+
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	} else {
+		defer response.Body.Close()
+		contents, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Printf("%s", err)
+			os.Exit(1)
+		}
+		fmt.Printf("state: %s\n", string(contents))
+	}
 }
 
 func UTF16LE(in string) []uint16 {
