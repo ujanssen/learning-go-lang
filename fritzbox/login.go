@@ -28,36 +28,37 @@ func main() {
 	var username = flag.String("username", "", "fritzbox screen username")
 	flag.Parse()
 
-	var s SessionInfo
+	var s SessionInfo = BoxSessionInfo()
+	var l SessionInfo = BoxLogin(password, username, s.Challenge)
+	fmt.Printf("SID -> %v\n", l.SID)
+}
 
-	response, err := http.Get("http://fritz/login_sid.lua")
+func UTF16LE(in string) []uint16 {
+	runes := []rune(in)
+	return utf16.Encode(runes)
+}
+
+func md5Hash(data []uint16) (hash string) {
+	buf := new(bytes.Buffer)
+	err := binary.Write(buf, binary.LittleEndian, data)
 	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
-	} else {
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
-		fmt.Printf("%s\n", string(contents))
-
-		err = xml.Unmarshal(contents, &s)
-
-		fmt.Printf("SessionInfo: %s\n", s)
+		fmt.Println("binary.Write failed:", err)
 	}
+	hash = fmt.Sprintf("%x", md5.Sum(buf.Bytes()))
+	return hash
+}
 
-	text := s.Challenge + "-" + *password
+func BoxLogin(password, username *string, challenge string) (s SessionInfo) {
+	text := challenge + "-" + *password
 
 	hash := md5Hash(UTF16LE(text))
-	sid := s.Challenge + "-" + hash
+	sid := challenge + "-" + hash
 	fmt.Printf("response -> %s\n", sid)
 
 	values := url.Values{}
 	values.Set("username", *username)
 	values.Set("response", sid)
-	response, err = http.PostForm("http://fritz/login_sid.lua", values)
+	response, err := http.PostForm("http://fritz/login_sid.lua", values)
 	fmt.Printf("values -> %v\n", values)
 
 	if err != nil {
@@ -76,19 +77,26 @@ func main() {
 
 		fmt.Printf("SessionInfo: %s\n", s)
 	}
+	return s
 }
 
-func UTF16LE(in string) []uint16 {
-	runes := []rune(in)
-	return utf16.Encode(runes)
-}
-
-func md5Hash(data []uint16) (hash string) {
-	buf := new(bytes.Buffer)
-	err := binary.Write(buf, binary.LittleEndian, data)
+func BoxSessionInfo() (s SessionInfo) {
+	response, err := http.Get("http://fritz/login_sid.lua")
 	if err != nil {
-		fmt.Println("binary.Write failed:", err)
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	} else {
+		defer response.Body.Close()
+		contents, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Printf("%s", err)
+			os.Exit(1)
+		}
+		fmt.Printf("%s\n", string(contents))
+
+		err = xml.Unmarshal(contents, &s)
+
+		fmt.Printf("SessionInfo: %s\n", s)
 	}
-	hash = fmt.Sprintf("%x", md5.Sum(buf.Bytes()))
-	return hash
+	return s
 }
