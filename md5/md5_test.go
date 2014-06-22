@@ -2,6 +2,7 @@ package md5_test
 
 import (
 	"github.com/ujanssen/learning-go-lang/md5"
+	"io/ioutil"
 	"testing"
 )
 
@@ -9,6 +10,15 @@ func testMd5(in, want string, t *testing.T) {
 	if got := md5.HashString(in); want != got {
 		t.Errorf("got %v, want %v", got, want)
 	}
+
+	writeToFile(want, in)
+	if got, _ := md5.HashFile(want); want != got {
+		t.Errorf("got %v, want %v", got, want)
+	}
+}
+
+func writeToFile(file, contents string) {
+	ioutil.WriteFile(file, []byte(contents), 0666)
 }
 
 const text string = " jagt im komplett verwahrlosten Taxi quer durch Bayern"

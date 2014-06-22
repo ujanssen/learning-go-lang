@@ -7,11 +7,11 @@ import (
 	"os"
 )
 
-func HashString(input string) string {
+func HashString(input string) (hash string) {
 	h := md5.New()
 	io.WriteString(h, input)
-	md5Sum := h.Sum(nil)
-	return fmt.Sprintf("%x", md5Sum)
+	hash = fmt.Sprintf("%x", h.Sum(nil))
+	return hash
 }
 
 func HashFile(file string) (hash string, err error) {
@@ -26,7 +26,6 @@ func HashFile(file string) (hash string, err error) {
 	}
 	h := md5.New()
 	io.Copy(h, f)
-	b := h.Sum(nil)
-	hash = fmt.Sprintf("%x", b)
+	hash = fmt.Sprintf("%x", h.Sum(nil))
 	return hash, err
 }
