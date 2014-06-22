@@ -6,15 +6,20 @@ import (
 	"testing"
 )
 
-func testMd5(in, want string, t *testing.T) {
-	if got := md5.HashString(in); want != got {
+func report(got, want string, t *testing.T) {
+	if want != got {
 		t.Errorf("got %v, want %v", got, want)
 	}
+}
 
+func testMd5(in, want string, t *testing.T) {
+	// test md5.HashString
+	report(md5.HashString(in), want, t)
+
+	// test md5.HashFile
 	writeToFile(want, in)
-	if got, _ := md5.HashFile(want); want != got {
-		t.Errorf("got %v, want %v", got, want)
-	}
+	got, _ := md5.HashFile(want)
+	report(got, want, t)
 }
 
 func writeToFile(file, contents string) {
