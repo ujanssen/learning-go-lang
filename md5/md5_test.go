@@ -6,7 +6,7 @@ import (
 )
 
 func testMd5(in, want string, t *testing.T) {
-	if got := md5.Hash(in); want != got {
+	if got := md5.HashString(in); want != got {
 		t.Errorf("got %v, want %v", got, want)
 	}
 }
