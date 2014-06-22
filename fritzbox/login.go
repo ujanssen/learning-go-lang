@@ -3,15 +3,16 @@ package main
 //curl  http://fritz/login_sid.lua
 
 import (
-	// "encoding/xml"
-	"crypto/md5"
-	"fmt"
-
-	// "io/ioutil"
-	// "net/http"
-	// "os"
 	"bytes"
+	"crypto/md5"
 	"encoding/binary"
+	"encoding/xml"
+	"flag"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"os"
 	"unicode/utf16"
 )
 
@@ -23,33 +24,58 @@ type SessionInfo struct {
 }
 
 func main() {
-	// response, err := http.Get("http://fritz/login_sid.lua")
-	// if err != nil {
-	// 	fmt.Printf("%s", err)
-	// 	os.Exit(1)
-	// } else {
-	// 	defer response.Body.Close()
-	// 	contents, err := ioutil.ReadAll(response.Body)
-	// 	if err != nil {
-	// 		fmt.Printf("%s", err)
-	// 		os.Exit(1)
-	// 	}
-	// 	fmt.Printf("%s\n", string(contents))
+	var password = flag.String("password", "", "fritzbox screen password")
+	var username = flag.String("username", "", "fritzbox screen username")
+	flag.Parse()
 
-	// 	var s SessionInfo
-	// 	err = xml.Unmarshal(contents, &s)
+	var s SessionInfo
 
-	// 	fmt.Printf("SessionInfo: %s\n", s)
-	// }
+	response, err := http.Get("http://fritz/login_sid.lua")
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	} else {
+		defer response.Body.Close()
+		contents, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Printf("%s", err)
+			os.Exit(1)
+		}
+		fmt.Printf("%s\n", string(contents))
 
-	challenge := "1234567z"
-	password := "äbc"
-	response := "1234567z-9e224a41eeefa284df7bb0f26c2913e2"
-	text := challenge + "-" + password
+		err = xml.Unmarshal(contents, &s)
+
+		fmt.Printf("SessionInfo: %s\n", s)
+	}
+
+	text := s.Challenge + "-" + *password
 
 	hash := md5Hash(UTF16LE(text))
-	fmt.Printf("response -> %s\n", challenge+"-"+hash)
-	fmt.Printf("response -> %s\n", response)
+	sid := s.Challenge + "-" + hash
+	fmt.Printf("response -> %s\n", sid)
+
+	values := url.Values{}
+	values.Set("username", *username)
+	values.Set("response", sid)
+	response, err = http.PostForm("http://fritz/login_sid.lua", values)
+	fmt.Printf("values -> %v\n", values)
+
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	} else {
+		defer response.Body.Close()
+		contents, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Printf("%s", err)
+			os.Exit(1)
+		}
+		fmt.Printf("%s\n", string(contents))
+
+		err = xml.Unmarshal(contents, &s)
+
+		fmt.Printf("SessionInfo: %s\n", s)
+	}
 }
 
 func UTF16LE(in string) []uint16 {
@@ -65,5 +91,4 @@ func md5Hash(data []uint16) (hash string) {
 	}
 	hash = fmt.Sprintf("%x", md5.Sum(buf.Bytes()))
 	return hash
-
 }
