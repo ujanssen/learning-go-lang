@@ -56,51 +56,44 @@ func main() {
 		fmt.Printf("ain: %s\n", ain)
 	}
 
-	// set switch on
-	values = url.Values{}
-	values.Set("ain", ain)
-	values.Set("switchcmd", "setswitchon")
-	values.Set("sid", l.SID)
-	response, err = http.Get("http://fritz/webservices/homeautoswitch.lua?" + values.Encode())
-	fmt.Printf("values -> %v\n", values)
-
-	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
-	} else {
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
-		fmt.Printf("state: %s\n", string(contents))
-	}
-
-	time.Sleep(time.Second)
-
-	// set switch off
-	values = url.Values{}
-	values.Set("ain", ain)
-	values.Set("switchcmd", "setswitchoff")
-	values.Set("sid", l.SID)
-	response, err = http.Get("http://fritz/webservices/homeautoswitch.lua?" + values.Encode())
-	fmt.Printf("values -> %v\n", values)
-
-	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
-	} else {
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
-		fmt.Printf("state: %s\n", string(contents))
-	}
+	setswitchon(ain, l.SID)
+	time.Sleep(5 * time.Second)
+	setswitchoff(ain, l.SID)
 }
 
+// set switch on
+func setswitchon(ain, sid string) {
+	setswitch(ain, sid, "setswitchon")
+}
+
+// set switch off
+func setswitchoff(ain, sid string) {
+	setswitch(ain, sid, "setswitchoff")
+}
+
+// set switch
+func setswitch(ain, sid, switchcmd string) {
+	values := url.Values{}
+	values.Set("ain", ain)
+	values.Set("switchcmd", switchcmd)
+	values.Set("sid", sid)
+	response, err := http.Get("http://fritz/webservices/homeautoswitch.lua?" + values.Encode())
+	fmt.Printf("values -> %v\n", values)
+
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	} else {
+		defer response.Body.Close()
+		contents, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Printf("%s", err)
+			os.Exit(1)
+		}
+		fmt.Printf("state: %s\n", string(contents))
+	}
+
+}
 func UTF16LE(in string) []uint16 {
 	runes := []rune(in)
 	return utf16.Encode(runes)
