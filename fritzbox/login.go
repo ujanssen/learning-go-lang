@@ -133,9 +133,7 @@ func BoxLogin(password, username *string, challenge string) (s SessionInfo) {
 			os.Exit(1)
 		}
 		fmt.Printf("%s\n", string(contents))
-
 		err = xml.Unmarshal(contents, &s)
-
 		fmt.Printf("SessionInfo: %s\n", s)
 	}
 	return s
@@ -154,9 +152,7 @@ func BoxSessionInfo() (s SessionInfo) {
 			os.Exit(1)
 		}
 		fmt.Printf("%s\n", string(contents))
-
 		err = xml.Unmarshal(contents, &s)
-
 		fmt.Printf("SessionInfo: %s\n", s)
 	}
 	return s
