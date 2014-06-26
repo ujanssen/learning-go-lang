@@ -22,7 +22,21 @@ type SessionInfo struct {
 	BlockTime string `xml:"BlockTime"`
 }
 
-func SID(username, password string) string {
+type Fritzbox struct {
+	Username, Password string
+	sid                string
+}
+
+func NewFritzbox(username, password string) *Fritzbox {
+	box := Fritzbox{
+		Username: username,
+		Password: password}
+
+	box.sid = sid(username, password)
+	return &box
+}
+
+func sid(username, password string) string {
 
 	var s SessionInfo = BoxSessionInfo()
 	var l SessionInfo = BoxLogin(password, username, s.Challenge)

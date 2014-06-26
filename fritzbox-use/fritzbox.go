@@ -11,5 +11,7 @@ func main() {
 	var username = flag.String("username", "", "fritzbox screen username")
 	flag.Parse()
 
-	fmt.Printf("SID -> %v\n", fritzbox.SID(*username, *password))
+	box := fritzbox.NewFritzbox(*username, *password)
+
+	fmt.Printf("box -> %v\n", box)
 }
