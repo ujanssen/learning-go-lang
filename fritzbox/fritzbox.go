@@ -25,6 +25,7 @@ type SessionInfo struct {
 type Fritzbox struct {
 	Username, Password string
 	sid                string
+	ainList            string
 }
 
 func NewFritzbox(username, password string) *Fritzbox {
@@ -32,15 +33,40 @@ func NewFritzbox(username, password string) *Fritzbox {
 		Username: username,
 		Password: password}
 
-	box.sid = sid(username, password)
+	(&box).getsid()
 	return &box
 }
 
-func sid(username, password string) string {
-
+func (box *Fritzbox) getsid() {
 	var s SessionInfo = BoxSessionInfo()
-	var l SessionInfo = BoxLogin(password, username, s.Challenge)
-	return l.SID
+	var l SessionInfo = BoxLogin(box.Password, box.Username, s.Challenge)
+	box.sid = l.SID
+}
+
+func (box *Fritzbox) Switchlist() {
+	// get ain
+	values := url.Values{}
+	values.Set("switchcmd", "getswitchlist")
+	values.Set("sid", box.sid)
+	response, err := http.Get("http://fritz/webservices/homeautoswitch.lua?" + values.Encode())
+	fmt.Printf("values -> %v\n", values)
+
+	var ain string
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	} else {
+		defer response.Body.Close()
+		contents, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Printf("%s", err)
+			os.Exit(1)
+		}
+		ain = string(contents)
+		ain = ain[0 : len(ain)-1]
+		fmt.Printf("ain: %s\n", ain)
+	}
+	box.ainList = ain
 }
 
 func UTF16LE(in string) []uint16 {

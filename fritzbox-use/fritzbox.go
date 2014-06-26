@@ -12,6 +12,7 @@ func main() {
 	flag.Parse()
 
 	box := fritzbox.NewFritzbox(*username, *password)
+	box.Switchlist()
 
 	fmt.Printf("box -> %v\n", box)
 }
