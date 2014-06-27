@@ -23,13 +23,14 @@ type SessionInfo struct {
 }
 
 type Fritzbox struct {
-	Username, Password string
-	sid                string
-	ainList            string
+	Host, Username, Password string
+	sid                      string
+	ainList                  string
 }
 
-func NewFritzbox(username, password string) *Fritzbox {
+func NewFritzbox(host, username, password string) *Fritzbox {
 	box := Fritzbox{
+		Host:     host,
 		Username: username,
 		Password: password}
 
@@ -38,8 +39,8 @@ func NewFritzbox(username, password string) *Fritzbox {
 }
 
 func (box *Fritzbox) getsid() {
-	var s SessionInfo = BoxSessionInfo()
-	var l SessionInfo = BoxLogin(box.Password, box.Username, s.Challenge)
+	var s SessionInfo = BoxSessionInfo(box.Host)
+	var l SessionInfo = BoxLogin(box.Host, box.Password, box.Username, s.Challenge)
 	box.sid = l.SID
 }
 
@@ -48,7 +49,7 @@ func (box *Fritzbox) Switchlist() {
 	values := url.Values{}
 	values.Set("switchcmd", "getswitchlist")
 	values.Set("sid", box.sid)
-	response, err := http.Get("http://fritz/webservices/homeautoswitch.lua?" + values.Encode())
+	response, err := http.Get("http://" + box.Host + "/webservices/homeautoswitch.lua?" + values.Encode())
 	fmt.Printf("values -> %v\n", values)
 
 	var ain string
@@ -84,7 +85,7 @@ func md5Hash(data []uint16) (hash string) {
 	return hash
 }
 
-func BoxLogin(password, username string, challenge string) (s SessionInfo) {
+func BoxLogin(host, password, username string, challenge string) (s SessionInfo) {
 	text := challenge + "-" + password
 
 	hash := md5Hash(UTF16LE(text))
@@ -94,7 +95,7 @@ func BoxLogin(password, username string, challenge string) (s SessionInfo) {
 	values := url.Values{}
 	values.Set("username", username)
 	values.Set("response", sid)
-	response, err := http.PostForm("http://fritz/login_sid.lua", values)
+	response, err := http.PostForm("http://"+host+"/login_sid.lua", values)
 	fmt.Printf("values -> %v\n", values)
 
 	if err != nil {
@@ -114,8 +115,8 @@ func BoxLogin(password, username string, challenge string) (s SessionInfo) {
 	return s
 }
 
-func BoxSessionInfo() (s SessionInfo) {
-	response, err := http.Get("http://fritz/login_sid.lua")
+func BoxSessionInfo(host string) (s SessionInfo) {
+	response, err := http.Get("http://" + host + "/login_sid.lua")
 	if err != nil {
 		fmt.Printf("%s", err)
 		os.Exit(1)
