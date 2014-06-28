@@ -52,13 +52,21 @@ func (box *Fritzbox) SwitchOff(ain string) {
 func (box *Fritzbox) SwitchState(ain string) {
 	box.switchCommand("getswitchstate", ain)
 }
+func (box *Fritzbox) Switchlist() {
+	ain := box.switchCommand("getswitchlist", "")
+	ain = ain[0 : len(ain)-1]
+	fmt.Printf("ain: %s\n", ain)
+	box.ainList = ain
+}
 
-func (box *Fritzbox) switchCommand(switchcmd, ain string) {
+func (box *Fritzbox) switchCommand(switchcmd, ain string) (resp string) {
 	// get ain
 	values := url.Values{}
 	values.Set("switchcmd", switchcmd)
 	values.Set("sid", box.sid)
-	values.Set("ain", ain)
+	if len(ain) > 0 {
+		values.Set("ain", ain)
+	}
 	response, err := http.Get("http://" + box.Host + "/webservices/homeautoswitch.lua?" + values.Encode())
 	fmt.Printf("values -> %v\n", values)
 
@@ -72,34 +80,10 @@ func (box *Fritzbox) switchCommand(switchcmd, ain string) {
 			fmt.Printf("%s", err)
 			os.Exit(1)
 		}
-		fmt.Printf("response: %s\n", string(contents))
+		resp = string(contents)
+		fmt.Printf("response: %s\n", resp)
 	}
-}
-
-func (box *Fritzbox) Switchlist() {
-	// get ain
-	values := url.Values{}
-	values.Set("switchcmd", "getswitchlist")
-	values.Set("sid", box.sid)
-	response, err := http.Get("http://" + box.Host + "/webservices/homeautoswitch.lua?" + values.Encode())
-	fmt.Printf("values -> %v\n", values)
-
-	var ain string
-	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
-	} else {
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
-		ain = string(contents)
-		ain = ain[0 : len(ain)-1]
-		fmt.Printf("ain: %s\n", ain)
-	}
-	box.ainList = ain
+	return resp
 }
 
 func UTF16LE(in string) []uint16 {
