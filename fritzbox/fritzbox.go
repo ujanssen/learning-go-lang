@@ -1,7 +1,5 @@
 package fritzbox
 
-//curl  http://fritz/login_sid.lua
-
 import (
 	"bytes"
 	"crypto/md5"
@@ -70,14 +68,10 @@ func (box *Fritzbox) switchCommand(switchcmd, ain string) (resp string) {
 	response, err := http.Get(box.CommandURL + "?" + values.Encode())
 	fmt.Printf("values -> %v\n", values)
 
-	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
-	} else {
-		contents := readBody(response.Body)
-		resp = string(contents)
-		fmt.Printf("response: %s\n", resp)
-	}
+	checkError(err)
+	contents := readBody(response.Body)
+	resp = string(contents)
+	fmt.Printf("response: %s\n", resp)
 	return resp
 }
 
@@ -96,30 +90,22 @@ func (box *Fritzbox) login() {
 	response, err := http.PostForm(box.LoginURL, values)
 	fmt.Printf("values -> %v\n", values)
 
-	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
-	} else {
-		contents := readBody(response.Body)
-		var s SessionInfo
-		fmt.Printf("%s\n", string(contents))
-		err = xml.Unmarshal(contents, &s)
-		fmt.Printf("SessionInfo: %s\n", s)
-		box.sid = s.SID
-	}
+	checkError(err)
+	contents := readBody(response.Body)
+	var s SessionInfo
+	fmt.Printf("%s\n", string(contents))
+	err = xml.Unmarshal(contents, &s)
+	fmt.Printf("SessionInfo: %s\n", s)
+	box.sid = s.SID
 }
 func (box *Fritzbox) challenge() string {
 	var s SessionInfo
 	response, err := http.Get(box.LoginURL)
-	if err != nil {
-		fmt.Printf("%s", err)
-		os.Exit(1)
-	} else {
-		contents := readBody(response.Body)
-		fmt.Printf("%s\n", string(contents))
-		err = xml.Unmarshal(contents, &s)
-		fmt.Printf("SessionInfo: %s\n", s)
-	}
+	checkError(err)
+	contents := readBody(response.Body)
+	fmt.Printf("%s\n", string(contents))
+	err = xml.Unmarshal(contents, &s)
+	fmt.Printf("SessionInfo: %s\n", s)
 	return s.Challenge
 }
 
@@ -131,10 +117,7 @@ func utf16Encode(test string) []uint16 {
 func md5Hash(data []uint16) (hash string) {
 	buf := new(bytes.Buffer)
 	err := binary.Write(buf, binary.LittleEndian, data)
-	if err != nil {
-		fmt.Println("binary.Write failed:", err)
-		os.Exit(1)
-	}
+	checkError(err)
 	hash = fmt.Sprintf("%x", md5.Sum(buf.Bytes()))
 	return hash
 }
@@ -142,9 +125,12 @@ func md5Hash(data []uint16) (hash string) {
 func readBody(body io.ReadCloser) []byte {
 	defer body.Close()
 	contents, err := ioutil.ReadAll(body)
+	checkError(err)
+	return contents
+}
+func checkError(err error) {
 	if err != nil {
 		fmt.Printf("%s", err)
 		os.Exit(1)
 	}
-	return contents
 }
