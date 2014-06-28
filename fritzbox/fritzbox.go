@@ -39,8 +39,8 @@ func NewFritzbox(host, username, password string) *Fritzbox {
 }
 
 func (box *Fritzbox) getsid() {
-	var s SessionInfo = BoxSessionInfo(box.Host)
-	var l SessionInfo = BoxLogin(box.Host, box.Password, box.Username, s.Challenge)
+	challenge := BoxChallenge(box.Host)
+	var l SessionInfo = BoxLogin(box.Host, box.Password, box.Username, challenge)
 	box.sid = l.SID
 }
 func (box *Fritzbox) SwitchOn(ain string) {
@@ -86,7 +86,7 @@ func (box *Fritzbox) switchCommand(switchcmd, ain string) (resp string) {
 	return resp
 }
 
-func UTF16LE(in string) []uint16 {
+func utf16Encode(in string) []uint16 {
 	runes := []rune(in)
 	return utf16.Encode(runes)
 }
@@ -104,13 +104,13 @@ func md5Hash(data []uint16) (hash string) {
 func BoxLogin(host, password, username string, challenge string) (s SessionInfo) {
 	text := challenge + "-" + password
 
-	hash := md5Hash(UTF16LE(text))
-	sid := challenge + "-" + hash
-	fmt.Printf("response -> %s\n", sid)
+	hash := md5Hash(utf16Encode(text))
+	resp := challenge + "-" + hash
+	fmt.Printf("response -> %s\n", resp)
 
 	values := url.Values{}
 	values.Set("username", username)
-	values.Set("response", sid)
+	values.Set("response", resp)
 	response, err := http.PostForm("http://"+host+"/login_sid.lua", values)
 	fmt.Printf("values -> %v\n", values)
 
@@ -131,7 +131,8 @@ func BoxLogin(host, password, username string, challenge string) (s SessionInfo)
 	return s
 }
 
-func BoxSessionInfo(host string) (s SessionInfo) {
+func BoxChallenge(host string) string {
+	var s SessionInfo
 	response, err := http.Get("http://" + host + "/login_sid.lua")
 	if err != nil {
 		fmt.Printf("%s", err)
@@ -147,5 +148,5 @@ func BoxSessionInfo(host string) (s SessionInfo) {
 		err = xml.Unmarshal(contents, &s)
 		fmt.Printf("SessionInfo: %s\n", s)
 	}
-	return s
+	return s.Challenge
 }
