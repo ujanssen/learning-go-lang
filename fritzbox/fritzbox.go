@@ -39,7 +39,7 @@ func NewFritzbox(host, username, password string) *Fritzbox {
 }
 
 func (box *Fritzbox) getsid() {
-	challenge := BoxChallenge(box.Host)
+	challenge := box.challenge()
 	var l SessionInfo = BoxLogin(box.Host, box.Password, box.Username, challenge)
 	box.sid = l.SID
 }
@@ -130,10 +130,9 @@ func BoxLogin(host, password, username string, challenge string) (s SessionInfo)
 	}
 	return s
 }
-
-func BoxChallenge(host string) string {
+func (box *Fritzbox) challenge() string {
 	var s SessionInfo
-	response, err := http.Get("http://" + host + "/login_sid.lua")
+	response, err := http.Get("http://" + box.Host + "/login_sid.lua")
 	if err != nil {
 		fmt.Printf("%s", err)
 		os.Exit(1)
