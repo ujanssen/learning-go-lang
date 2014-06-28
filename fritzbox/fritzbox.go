@@ -66,8 +66,6 @@ func (box *Fritzbox) switchCommand(switchcmd, ain string) (resp string) {
 		values.Set("ain", ain)
 	}
 	response, err := http.Get(box.CommandURL + "?" + values.Encode())
-	fmt.Printf("values -> %v\n", values)
-
 	checkError(err)
 	contents := readBody(response.Body)
 	resp = string(contents)
@@ -77,20 +75,16 @@ func (box *Fritzbox) switchCommand(switchcmd, ain string) (resp string) {
 
 func (box *Fritzbox) login() {
 	challenge := box.challenge()
-
 	text := challenge + "-" + box.Password
-
 	hash := md5Hash(utf16Encode(text))
 	resp := challenge + "-" + hash
-	fmt.Printf("response -> %s\n", resp)
 
 	values := url.Values{}
 	values.Set("username", box.Username)
 	values.Set("response", resp)
 	response, err := http.PostForm(box.LoginURL, values)
-	fmt.Printf("values -> %v\n", values)
-
 	checkError(err)
+
 	contents := readBody(response.Body)
 	box.sid = getSessionInfo(contents).SID
 }
@@ -127,9 +121,9 @@ func checkError(err error) {
 	}
 }
 func getSessionInfo(contents []byte) (s SessionInfo) {
-	fmt.Printf("%s\n", string(contents))
+	fmt.Printf("%s", string(contents))
 	err := xml.Unmarshal(contents, &s)
 	checkError(err)
-	fmt.Printf("SessionInfo: %s\n", s)
+	fmt.Printf("SessionInfo: %s\n\n", s)
 	return s
 }
