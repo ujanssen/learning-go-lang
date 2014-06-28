@@ -40,13 +40,9 @@ func NewFritzbox(host, username, password string) *Fritzbox {
 		LoginURL:   "http://" + host + "/login_sid.lua",
 		CommandURL: "http://" + host + "/webservices/homeautoswitch.lua"}
 
-	(&box).getsid()
+	challenge := (&box).challenge()
+	(&box).login(challenge)
 	return &box
-}
-
-func (box *Fritzbox) getsid() {
-	challenge := box.challenge()
-	box.login(challenge)
 }
 
 func (box *Fritzbox) SwitchOn(ain string) {
@@ -66,7 +62,6 @@ func (box *Fritzbox) Switchlist() {
 }
 
 func (box *Fritzbox) switchCommand(switchcmd, ain string) (resp string) {
-	// get ain
 	values := url.Values{}
 	values.Set("switchcmd", switchcmd)
 	values.Set("sid", box.sid)
@@ -85,21 +80,6 @@ func (box *Fritzbox) switchCommand(switchcmd, ain string) (resp string) {
 		fmt.Printf("response: %s\n", resp)
 	}
 	return resp
-}
-
-func utf16Encode(in string) []uint16 {
-	runes := []rune(in)
-	return utf16.Encode(runes)
-}
-
-func md5Hash(data []uint16) (hash string) {
-	buf := new(bytes.Buffer)
-	err := binary.Write(buf, binary.LittleEndian, data)
-	if err != nil {
-		fmt.Println("binary.Write failed:", err)
-	}
-	hash = fmt.Sprintf("%x", md5.Sum(buf.Bytes()))
-	return hash
 }
 
 func (box *Fritzbox) login(challenge string) {
@@ -140,6 +120,22 @@ func (box *Fritzbox) challenge() string {
 		fmt.Printf("SessionInfo: %s\n", s)
 	}
 	return s.Challenge
+}
+
+func utf16Encode(test string) []uint16 {
+	runes := []rune(test)
+	return utf16.Encode(runes)
+}
+
+func md5Hash(data []uint16) (hash string) {
+	buf := new(bytes.Buffer)
+	err := binary.Write(buf, binary.LittleEndian, data)
+	if err != nil {
+		fmt.Println("binary.Write failed:", err)
+		os.Exit(1)
+	}
+	hash = fmt.Sprintf("%x", md5.Sum(buf.Bytes()))
+	return hash
 }
 
 func readBody(body io.ReadCloser) []byte {
