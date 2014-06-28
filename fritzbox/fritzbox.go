@@ -40,8 +40,7 @@ func NewFritzbox(host, username, password string) *Fritzbox {
 		LoginURL:   "http://" + host + "/login_sid.lua",
 		CommandURL: "http://" + host + "/webservices/homeautoswitch.lua"}
 
-	challenge := (&box).challenge()
-	(&box).login(challenge)
+	(&box).login()
 	return &box
 }
 
@@ -82,7 +81,9 @@ func (box *Fritzbox) switchCommand(switchcmd, ain string) (resp string) {
 	return resp
 }
 
-func (box *Fritzbox) login(challenge string) {
+func (box *Fritzbox) login() {
+	challenge := box.challenge()
+
 	text := challenge + "-" + box.Password
 
 	hash := md5Hash(utf16Encode(text))
