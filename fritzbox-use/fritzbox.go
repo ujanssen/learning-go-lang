@@ -23,6 +23,10 @@ func main() {
 		box.Switchlist()
 	case "on":
 		box.SwitchOn(*ain)
+	case "off":
+		box.SwitchOff(*ain)
+	case "state":
+		box.SwitchState(*ain)
 	}
 
 }

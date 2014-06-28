@@ -44,9 +44,19 @@ func (box *Fritzbox) getsid() {
 	box.sid = l.SID
 }
 func (box *Fritzbox) SwitchOn(ain string) {
+	box.switchCommand("setswitchon", ain)
+}
+func (box *Fritzbox) SwitchOff(ain string) {
+	box.switchCommand("setswitchoff", ain)
+}
+func (box *Fritzbox) SwitchState(ain string) {
+	box.switchCommand("getswitchstate", ain)
+}
+
+func (box *Fritzbox) switchCommand(switchcmd, ain string) {
 	// get ain
 	values := url.Values{}
-	values.Set("switchcmd", "setswitchon")
+	values.Set("switchcmd", switchcmd)
 	values.Set("sid", box.sid)
 	values.Set("ain", ain)
 	response, err := http.Get("http://" + box.Host + "/webservices/homeautoswitch.lua?" + values.Encode())
@@ -62,8 +72,6 @@ func (box *Fritzbox) SwitchOn(ain string) {
 			fmt.Printf("%s", err)
 			os.Exit(1)
 		}
-		ain = string(contents)
-		ain = ain[0 : len(ain)-1]
 		fmt.Printf("response: %s\n", string(contents))
 	}
 }
