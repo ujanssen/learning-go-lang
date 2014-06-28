@@ -25,15 +25,20 @@ type SessionInfo struct {
 
 type Fritzbox struct {
 	Host, Username, Password string
-	sid                      string
-	ainList                  string
+
+	LoginURL, CommandURL string
+
+	sid     string
+	ainList string
 }
 
 func NewFritzbox(host, username, password string) *Fritzbox {
 	box := Fritzbox{
-		Host:     host,
-		Username: username,
-		Password: password}
+		Host:       host,
+		Username:   username,
+		Password:   password,
+		LoginURL:   "http://" + host + "/login_sid.lua",
+		CommandURL: "http://" + host + "/webservices/homeautoswitch.lua"}
 
 	(&box).getsid()
 	return &box
@@ -68,7 +73,7 @@ func (box *Fritzbox) switchCommand(switchcmd, ain string) (resp string) {
 	if len(ain) > 0 {
 		values.Set("ain", ain)
 	}
-	response, err := http.Get("http://" + box.Host + "/webservices/homeautoswitch.lua?" + values.Encode())
+	response, err := http.Get(box.CommandURL + "?" + values.Encode())
 	fmt.Printf("values -> %v\n", values)
 
 	if err != nil {
@@ -107,7 +112,7 @@ func (box *Fritzbox) login(challenge string) {
 	values := url.Values{}
 	values.Set("username", box.Username)
 	values.Set("response", resp)
-	response, err := http.PostForm("http://"+box.Host+"/login_sid.lua", values)
+	response, err := http.PostForm(box.LoginURL, values)
 	fmt.Printf("values -> %v\n", values)
 
 	if err != nil {
@@ -124,7 +129,7 @@ func (box *Fritzbox) login(challenge string) {
 }
 func (box *Fritzbox) challenge() string {
 	var s SessionInfo
-	response, err := http.Get("http://" + box.Host + "/login_sid.lua")
+	response, err := http.Get(box.LoginURL)
 	if err != nil {
 		fmt.Printf("%s", err)
 		os.Exit(1)
