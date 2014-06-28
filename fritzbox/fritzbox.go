@@ -92,21 +92,13 @@ func (box *Fritzbox) login() {
 
 	checkError(err)
 	contents := readBody(response.Body)
-	var s SessionInfo
-	fmt.Printf("%s\n", string(contents))
-	err = xml.Unmarshal(contents, &s)
-	fmt.Printf("SessionInfo: %s\n", s)
-	box.sid = s.SID
+	box.sid = getSessionInfo(contents).SID
 }
 func (box *Fritzbox) challenge() string {
-	var s SessionInfo
 	response, err := http.Get(box.LoginURL)
 	checkError(err)
 	contents := readBody(response.Body)
-	fmt.Printf("%s\n", string(contents))
-	err = xml.Unmarshal(contents, &s)
-	fmt.Printf("SessionInfo: %s\n", s)
-	return s.Challenge
+	return getSessionInfo(contents).Challenge
 }
 
 func utf16Encode(test string) []uint16 {
@@ -133,4 +125,11 @@ func checkError(err error) {
 		fmt.Printf("%s", err)
 		os.Exit(1)
 	}
+}
+func getSessionInfo(contents []byte) (s SessionInfo) {
+	fmt.Printf("%s\n", string(contents))
+	err := xml.Unmarshal(contents, &s)
+	checkError(err)
+	fmt.Printf("SessionInfo: %s\n", s)
+	return s
 }
