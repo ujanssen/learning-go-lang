@@ -8,6 +8,7 @@ import (
 	"encoding/binary"
 	"encoding/xml"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -74,12 +75,7 @@ func (box *Fritzbox) switchCommand(switchcmd, ain string) (resp string) {
 		fmt.Printf("%s", err)
 		os.Exit(1)
 	} else {
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
+		contents := readBody(response.Body)
 		resp = string(contents)
 		fmt.Printf("response: %s\n", resp)
 	}
@@ -118,12 +114,7 @@ func (box *Fritzbox) login(challenge string) {
 		fmt.Printf("%s", err)
 		os.Exit(1)
 	} else {
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
+		contents := readBody(response.Body)
 		var s SessionInfo
 		fmt.Printf("%s\n", string(contents))
 		err = xml.Unmarshal(contents, &s)
@@ -138,15 +129,20 @@ func (box *Fritzbox) challenge() string {
 		fmt.Printf("%s", err)
 		os.Exit(1)
 	} else {
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
+		contents := readBody(response.Body)
 		fmt.Printf("%s\n", string(contents))
 		err = xml.Unmarshal(contents, &s)
 		fmt.Printf("SessionInfo: %s\n", s)
 	}
 	return s.Challenge
+}
+
+func readBody(body io.ReadCloser) []byte {
+	defer body.Close()
+	contents, err := ioutil.ReadAll(body)
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	}
+	return contents
 }
