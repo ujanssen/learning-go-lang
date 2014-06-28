@@ -40,9 +40,9 @@ func NewFritzbox(host, username, password string) *Fritzbox {
 
 func (box *Fritzbox) getsid() {
 	challenge := box.challenge()
-	var l SessionInfo = BoxLogin(box.Host, box.Password, box.Username, challenge)
-	box.sid = l.SID
+	box.login(challenge)
 }
+
 func (box *Fritzbox) SwitchOn(ain string) {
 	box.switchCommand("setswitchon", ain)
 }
@@ -101,17 +101,17 @@ func md5Hash(data []uint16) (hash string) {
 	return hash
 }
 
-func BoxLogin(host, password, username string, challenge string) (s SessionInfo) {
-	text := challenge + "-" + password
+func (box *Fritzbox) login(challenge string) {
+	text := challenge + "-" + box.Password
 
 	hash := md5Hash(utf16Encode(text))
 	resp := challenge + "-" + hash
 	fmt.Printf("response -> %s\n", resp)
 
 	values := url.Values{}
-	values.Set("username", username)
+	values.Set("username", box.Username)
 	values.Set("response", resp)
-	response, err := http.PostForm("http://"+host+"/login_sid.lua", values)
+	response, err := http.PostForm("http://"+box.Host+"/login_sid.lua", values)
 	fmt.Printf("values -> %v\n", values)
 
 	if err != nil {
@@ -124,11 +124,12 @@ func BoxLogin(host, password, username string, challenge string) (s SessionInfo)
 			fmt.Printf("%s", err)
 			os.Exit(1)
 		}
+		var s SessionInfo
 		fmt.Printf("%s\n", string(contents))
 		err = xml.Unmarshal(contents, &s)
 		fmt.Printf("SessionInfo: %s\n", s)
+		box.sid = s.SID
 	}
-	return s
 }
 func (box *Fritzbox) challenge() string {
 	var s SessionInfo
