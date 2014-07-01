@@ -31,15 +31,15 @@ type Fritzbox struct {
 }
 
 func NewFritzbox(host, username, password string) *Fritzbox {
-	box := Fritzbox{
+	box := &Fritzbox{
 		Host:       host,
 		Username:   username,
 		Password:   password,
 		LoginURL:   "http://" + host + "/login_sid.lua",
 		CommandURL: "http://" + host + "/webservices/homeautoswitch.lua"}
 
-	(&box).login()
-	return &box
+	box.login()
+	return box
 }
 
 func (box *Fritzbox) SwitchOn(ain string) {
