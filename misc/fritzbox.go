@@ -7,12 +7,13 @@ import (
 )
 
 func main() {
-	var host = flag.String("host", "", "fritzbox host or ip address")
-	var password = flag.String("password", "", "fritzbox screen password")
-	var username = flag.String("username", "", "fritzbox screen username")
-	var command = flag.String("command", "list", "list, on, off, state")
-	var ain = flag.String("ain", "", "ain")
-
+	var (
+		host     = flag.String("host", "", "fritzbox host or ip address")
+		password = flag.String("password", "", "fritzbox screen password")
+		username = flag.String("username", "", "fritzbox screen username")
+		command  = flag.String("command", "list", "list, on, off, state")
+		ain      = flag.String("ain", "", "ain")
+	)
 	flag.Parse()
 
 	box := fritzbox.NewFritzbox(*host, *username, *password)
