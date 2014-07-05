@@ -16,12 +16,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var msg = make([]byte, 512)
+	var s state.Message
 	for {
-		_, err = ws.Read(msg)
+		err := websocket.JSON.Receive(ws, &s)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("Receive: %s\n", msg)
+		fmt.Printf("Receive: %s\n", s)
 	}
 }

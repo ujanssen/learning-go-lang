@@ -3,6 +3,7 @@ package main
 // emmit a state to all connected clients
 
 import (
+	"fmt"
 	"github.com/ujanssen/learning-go-lang/concurrency/state"
 	"log"
 	"net/http"
@@ -26,7 +27,8 @@ func emitState(server *state.Server) {
 		time.Sleep(1 * time.Second)
 		if server.HasClients() {
 			log.Println("emit state")
-			server.SendAll(&state.Message{"hello", "world"})
+			t := fmt.Sprintf("%v", time.Now())
+			server.SendAll(&state.Message{"state", t})
 		} else {
 			log.Println("wait for clients")
 		}
