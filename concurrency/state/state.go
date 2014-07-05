@@ -13,6 +13,3 @@ type Message struct {
 func (self *Message) String() string {
 	return self.Head + " with " + self.Body
 }
-
-var maxId int = 0
-var channelBufSize int = 19

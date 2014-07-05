@@ -7,6 +7,9 @@ import (
 	"log"
 )
 
+var maxId int = 0
+var channelBufSize int = 10
+
 type Client struct {
 	id     int
 	ws     *websocket.Conn
@@ -64,7 +67,7 @@ func (c *Client) listenWrite() {
 
 		// send message to the client
 		case msg := <-c.ch:
-			log.Println("Send:", msg)
+			log.Printf("Send to client %d: %s\n", c.id, msg)
 			websocket.JSON.Send(c.ws, msg)
 
 		// receive done request
