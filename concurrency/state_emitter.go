@@ -23,11 +23,10 @@ func main() {
 }
 
 func emitState(server *state.Server) {
-	for {
-		time.Sleep(1 * time.Second)
+	for now := range time.Tick(1 * time.Second) {
 		if server.HasClients() {
 			log.Println("emit state")
-			t := fmt.Sprintf("%v", time.Now())
+			t := fmt.Sprintf("%v", now)
 			server.SendAll(&state.Message{"state", t})
 		} else {
 			log.Println("wait for clients")
