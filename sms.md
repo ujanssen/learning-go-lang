@@ -17,12 +17,12 @@ The message header contains control information, including, an author's email ad
 - a subject header field
 - a message body
 
-A message can be in boxes
+A message can have box tags
 
 - draft or sent (author)
-- inbox, trash(recipient)
+- inbox, trash (recipient)
 
-A message can have a state
+A message can have a stat tags
 
 - read or unread (recipient)
 - deleted
