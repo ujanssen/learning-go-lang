@@ -22,7 +22,7 @@ A message can have box tags
 - draft or sent (author)
 - inbox, trash (recipient)
 
-A message can have a stat tags
+A message can have a state tags
 
 - read or unread (recipient)
 - deleted
