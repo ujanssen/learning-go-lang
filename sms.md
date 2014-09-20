@@ -16,3 +16,12 @@ The message header contains control information, including, an author's email ad
 - a message submission date/time stamp
 - a subject header field
 - a message body
+
+States of a message
+-------------------
+
+A message can be
+
+- a draft or sent (author)
+- read or unread (recipient)
+- in the inbox, trash, deleted (recipient)
