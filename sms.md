@@ -32,7 +32,7 @@ The service
 
 The service defines an api.
 It must support the creation and deletion of users.
-And an user can sent and receve messages.
+And a user can sent and receve messages.
 
 Ressources:
 
