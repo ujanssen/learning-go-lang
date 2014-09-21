@@ -26,3 +26,16 @@ A message can have a state tags
 
 - read or unread (recipient)
 - deleted
+
+The service
+-----------
+
+The service defines an api.
+It must support the creation and deletion of users.
+And an user can sent and receve messages.
+
+Ressources:
+
+    /sms/users
+    /sms/message
+    
