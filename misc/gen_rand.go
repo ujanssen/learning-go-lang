@@ -14,13 +14,11 @@ func main() {
 	d := gen_rand.GenRand(mio)
 	fmt.Println("c ", d, " Dur ", time.Since(start))
 
-	maxProcs := runtime.GOMAXPROCS(0)
-	fmt.Println("maxProcs ", maxProcs)
 	numCPU := runtime.NumCPU()
 	fmt.Println("numCPU ", numCPU)
 
-	maxProcs = runtime.GOMAXPROCS(numCPU)
-	maxProcs = runtime.GOMAXPROCS(numCPU)
+	runtime.GOMAXPROCS(numCPU)
+	maxProcs := runtime.GOMAXPROCS(0)
 	fmt.Println("maxProcs ", maxProcs)
 
 	runtime.GOMAXPROCS(numCPU)
