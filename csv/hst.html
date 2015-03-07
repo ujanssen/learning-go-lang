@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Bandwidth {{.Date}}</title>
+  
+<script type='text/javascript' src='/js/jquery-1.9.1.js'></script>  
+<style type='text/css'></style>
+
+<script type='text/javascript'>//<![CDATA[ 
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Bandwidth over time'
+        },
+        subtitle: {
+            text: '{{.Date}}'
+        },
+        xAxis: {
+            categories: {{.Categories}}
+        },
+        yAxis: {
+            max: 100,
+            min: 0,
+            title: {
+                text: 'Bandwidth (Mbit/s)'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} MBit/s</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: '{{.Date}}',
+            data: {{.Data}}
+        }]
+    });
+});
+//]]>  
+
+</script>
+</head>
+
+<body>
+<script src="/js/highcharts.js"></script>
+<script src="/js/exporting.js"></script>
+
+<div id="container" style="min-width: 310px; height: 800px; margin: 0 auto"></div>
+<ul>
+    {{range .Dates}}
+    <li><a href="/?date={{.}}">{{.}}</a></li>
+    {{end}}
+</ul>
+  
+</body>
+</html>
+
+
