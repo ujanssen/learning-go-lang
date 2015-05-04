@@ -85,7 +85,14 @@ type Session struct {
 	Originator       string
 }
 
-func (Session *Session) login_with_password(uname string, pwd string, version string, originator string) {
+func (Session *Session) login_with_password(uname string, pwd string, version string, originator string) (err error) {
+	result := xmlrpc.Struct{}
+
+	params := make([]interface{}, 4)
+	params[0] = client.Username
+	params[1] = client.Password
+
+	err = client.RPCCall(&result, "session.login_with_password", params)
 }
 
 func (client *XenAPIClient) Login() (err error) {

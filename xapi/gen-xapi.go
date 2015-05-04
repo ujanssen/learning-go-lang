@@ -40,6 +40,9 @@ type XapiParam struct {
 	Doc  string
 }
 
+func (message XapiMessage) ParamsLen() int {
+	return len(message.Params)
+}
 func (name XapiName) String() string {
 	s := string(name)
 

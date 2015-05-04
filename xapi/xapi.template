@@ -76,8 +76,16 @@ type {{ .Name }} struct {
 	{{end}}
 }
 {{range .Messages}}
+{{ $message := . }}
 {{if eq .Name "login_with_password" }}
-func ({{ $xtype }} *{{ $xtype }}) {{ .Name }}({{range .Params}}{{ .Name }} {{ .Type }},{{end}}) {
+func ({{ $xtype }} *{{ $xtype }}) {{ .Name }}({{range .Params}}{{ .Name }} {{ .Type }},{{end}}) (err error){
+	result := xmlrpc.Struct{}
+
+	params := make([]interface{}, {{ $message.ParamsLen }})
+	params[0] = client.Username
+	params[1] = client.Password
+
+	err = client.RPCCall(&result, "session.login_with_password", params)
 }
 {{end}}{{end}}{{end}}{{end}}
 
