@@ -15,7 +15,11 @@ type {{ .Name }} struct {
 }
 {{range .Messages}}
 {{if eq .Name "login_with_password" }}
-func ({{ $xtype }} *{{ $xtype }}) {{ .Name }}() {
+func ({{ $xtype }} *{{ $xtype }}) {{ .Name }}(
+	{{range .Params}}
+		{{ .Name }} {{ .Type }},
+	{{end}}
+	) {
 }
 {{end}}{{end}}{{end}}{{end}}
 

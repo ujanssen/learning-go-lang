@@ -36,7 +36,7 @@ type XapiMessage struct {
 
 type XapiParam struct {
 	Name string
-	Type string
+	Type XapiTypeName
 	Doc  string
 }
 
