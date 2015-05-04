@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"text/template"
 )
 
@@ -13,14 +14,14 @@ type XapiTypes struct {
 }
 
 type XapiType struct {
-	Name        string
+	Name        XapiName
 	Description string
 	Fields      []XapiField
 	Messages    []XapiMessage
 }
 
 type XapiField struct {
-	Name        string
+	Name        XapiName
 	Description string
 	Type        string
 	Qualifier   string
@@ -38,6 +39,12 @@ type XapiParam struct {
 	Type string
 	Doc  string
 }
+
+func (name XapiName) Title() string {
+	return strings.Title(string(name))
+}
+
+type XapiName string
 
 func main() {
 	file, e := ioutil.ReadFile("./xapi.json")

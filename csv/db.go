@@ -38,7 +38,7 @@ func main() {
 
 	for _, rs := range rss {
 		if err := rs.Do(false, func(data []interface{}) (bool, error) {
-			fmt.Printf("hour %2d, min %02.1f, avg %02.1f, max %02.1f, count %3d\n", data[0], data[1], data[2], data[3], data[4])
+			fmt.Printf("hour %2d, min %4.1f, avg %4.1f, max %4.1f, count %3d\n", data[0], data[1], data[2], data[3], data[4])
 			return true, nil
 		}); err != nil {
 			panic(err)
@@ -79,4 +79,26 @@ func addToDB(date string, db *ql.DB) {
 			panic(err)
 		}
 	}
+}
+
+func checkErr(err error) {
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
+func listDates() (dates []string) {
+	dates = make([]string, 0)
+	fileInfos, err := ioutil.ReadDir(DATA_DIR)
+	if err != nil {
+		log.Println("error:", err)
+		return nil
+	}
+	for _, info := range fileInfos {
+		if strings.HasPrefix(info.Name(), "2015") {
+			dates = append(dates, info.Name()[0:10])
+		}
+	}
+	return dates
 }

@@ -8,7 +8,7 @@ import (
 // {{ .Description }}
 type {{ .Name }} struct {
 	{{range .Fields}}
-	x_{{ .Name }}     string // {{/* .Type */}}
+	{{ .Name.Title }}     string // {{/* .Type */}}
 	{{end}}
 }
 {{end}}
