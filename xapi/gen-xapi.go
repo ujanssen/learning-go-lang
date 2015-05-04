@@ -23,7 +23,7 @@ type XapiType struct {
 type XapiField struct {
 	Name        XapiName
 	Description string
-	Type        string
+	Type        XapiTypeName
 	Qualifier   string
 }
 
@@ -40,11 +40,25 @@ type XapiParam struct {
 	Doc  string
 }
 
-func (name XapiName) Title() string {
-	return strings.Title(string(name))
+func (name XapiName) String() string {
+	s := string(name)
+	return strings.Title(s)
+}
+
+func (name XapiTypeName) String() string {
+	s := string(name)
+	if s == "string" || s == "bool" {
+		return s
+	}
+	s = strings.Replace(s, "(", "", -1)
+	s = strings.Replace(s, ")", "", -1)
+	s = strings.Replace(s, "->", "", -1)
+
+	return "string // " + strings.Replace(s, " ", "_", -1)
 }
 
 type XapiName string
+type XapiTypeName string
 
 func main() {
 	file, e := ioutil.ReadFile("./xapi.json")
@@ -54,6 +68,7 @@ func main() {
 	}
 	var types XapiTypes
 	json.Unmarshal(file, &types)
+
 	t, err := template.New("xapi.template").ParseFiles("xapi.template")
 	if err != nil {
 		fmt.Printf("execution failed: %s\n", err)

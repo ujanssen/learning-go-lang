@@ -6,1390 +6,1390 @@ import (
 
 
 // A session
-type session struct {
+type Session struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	This_host     string // 
+	This_host     string // host_ref
 	
-	This_user     string // 
+	This_user     string // user_ref
 	
-	Last_active     string // 
+	Last_active     string // datetime
 	
-	Pool     string // 
+	Pool     bool
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Is_local_superuser     string // 
+	Is_local_superuser     bool
 	
-	Subject     string // 
+	Subject     string // subject_ref
 	
-	Validation_time     string // 
+	Validation_time     string // datetime
 	
-	Auth_user_sid     string // 
+	Auth_user_sid     string
 	
-	Auth_user_name     string // 
+	Auth_user_name     string
 	
-	Rbac_permissions     string // 
+	Rbac_permissions     string // string_set
 	
-	Tasks     string // 
+	Tasks     string // task_ref_set
 	
-	Parent     string // 
+	Parent     string // session_ref
 	
-	Originator     string // 
+	Originator     string
 	
 }
 
 // Management of remote authentication services
-type auth struct {
+type Auth struct {
 	
 }
 
 // A user or group that can log in xapi
-type subject struct {
+type Subject struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Subject_identifier     string // 
+	Subject_identifier     string
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Roles     string // 
+	Roles     string // role_ref_set
 	
 }
 
 // A set of permissions associated with a subject
-type role struct {
+type Role struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Subroles     string // 
+	Subroles     string // role_ref_set
 	
 }
 
 // A long-running asynchronous task
-type task struct {
+type Task struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Allowed_operations     string // 
+	Allowed_operations     string // enum_task_allowed_operations_set
 	
-	Current_operations     string // 
+	Current_operations     string // string__enum_task_allowed_operations_map
 	
-	Created     string // 
+	Created     string // datetime
 	
-	Finished     string // 
+	Finished     string // datetime
 	
-	Status     string // 
+	Status     string // enum_task_status_type
 	
-	Resident_on     string // 
+	Resident_on     string // host_ref
 	
-	Progress     string // 
+	Progress     string // float
 	
-	Type     string // 
+	Type     string
 	
-	Result     string // 
+	Result     string
 	
-	Error_info     string // 
+	Error_info     string // string_set
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Subtask_of     string // 
+	Subtask_of     string // task_ref
 	
-	Subtasks     string // 
+	Subtasks     string // task_ref_set
 	
-	Backtrace     string // 
+	Backtrace     string
 	
 }
 
 // Asynchronous event registration and handling
-type event struct {
+type Event struct {
 	
-	Id     string // 
+	Id     string // int
 	
-	Timestamp     string // 
+	Timestamp     string // datetime
 	
-	Class     string // 
+	Class     string
 	
-	Operation     string // 
+	Operation     string // enum_event_operation
 	
-	Ref     string // 
+	Ref     string
 	
-	Obj_uuid     string // 
+	Obj_uuid     string
 	
 }
 
 // Pool-wide information
-type pool struct {
+type Pool struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Master     string // 
+	Master     string // host_ref
 	
-	Default_SR     string // 
+	Default_SR     string // SR_ref
 	
-	Suspend_image_SR     string // 
+	Suspend_image_SR     string // SR_ref
 	
-	Crash_dump_SR     string // 
+	Crash_dump_SR     string // SR_ref
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Ha_enabled     string // 
+	Ha_enabled     bool
 	
-	Ha_configuration     string // 
+	Ha_configuration     string // string__string_map
 	
-	Ha_statefiles     string // 
+	Ha_statefiles     string // string_set
 	
-	Ha_host_failures_to_tolerate     string // 
+	Ha_host_failures_to_tolerate     string // int
 	
-	Ha_plan_exists_for     string // 
+	Ha_plan_exists_for     string // int
 	
-	Ha_allow_overcommit     string // 
+	Ha_allow_overcommit     bool
 	
-	Ha_overcommitted     string // 
+	Ha_overcommitted     bool
 	
-	Blobs     string // 
+	Blobs     string // string__blob_ref_map
 	
-	Tags     string // 
+	Tags     string // string_set
 	
-	Gui_config     string // 
+	Gui_config     string // string__string_map
 	
-	Wlb_url     string // 
+	Wlb_url     string
 	
-	Wlb_username     string // 
+	Wlb_username     string
 	
-	Wlb_enabled     string // 
+	Wlb_enabled     bool
 	
-	Wlb_verify_cert     string // 
+	Wlb_verify_cert     bool
 	
-	Redo_log_enabled     string // 
+	Redo_log_enabled     bool
 	
-	Redo_log_vdi     string // 
+	Redo_log_vdi     string // VDI_ref
 	
-	Vswitch_controller     string // 
+	Vswitch_controller     string
 	
-	Restrictions     string // 
+	Restrictions     string // string__string_map
 	
-	Metadata_VDIs     string // 
+	Metadata_VDIs     string // VDI_ref_set
 	
 }
 
 // Pool-wide patches
-type pool_patch struct {
+type Pool_patch struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Version     string // 
+	Version     string
 	
-	Size     string // 
+	Size     string // int
 	
-	Pool_applied     string // 
+	Pool_applied     bool
 	
-	Host_patches     string // 
+	Host_patches     string // host_patch_ref_set
 	
-	After_apply_guidance     string // 
+	After_apply_guidance     string // enum_after_apply_guidance_set
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // A virtual machine (or 'guest').
 type VM struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Allowed_operations     string // 
+	Allowed_operations     string // enum_vm_operations_set
 	
-	Current_operations     string // 
+	Current_operations     string // string__enum_vm_operations_map
 	
-	Power_state     string // 
+	Power_state     string // enum_vm_power_state
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	User_version     string // 
+	User_version     string // int
 	
-	Is_a_template     string // 
+	Is_a_template     bool
 	
-	Suspend_VDI     string // 
+	Suspend_VDI     string // VDI_ref
 	
-	Resident_on     string // 
+	Resident_on     string // host_ref
 	
-	Affinity     string // 
+	Affinity     string // host_ref
 	
-	Memory_overhead     string // 
+	Memory_overhead     string // int
 	
-	Memory_target     string // 
+	Memory_target     string // int
 	
-	Memory_static_max     string // 
+	Memory_static_max     string // int
 	
-	Memory_dynamic_max     string // 
+	Memory_dynamic_max     string // int
 	
-	Memory_dynamic_min     string // 
+	Memory_dynamic_min     string // int
 	
-	Memory_static_min     string // 
+	Memory_static_min     string // int
 	
-	VCPUs_params     string // 
+	VCPUs_params     string // string__string_map
 	
-	VCPUs_max     string // 
+	VCPUs_max     string // int
 	
-	VCPUs_at_startup     string // 
+	VCPUs_at_startup     string // int
 	
-	Actions_after_shutdown     string // 
+	Actions_after_shutdown     string // enum_on_normal_exit
 	
-	Actions_after_reboot     string // 
+	Actions_after_reboot     string // enum_on_normal_exit
 	
-	Actions_after_crash     string // 
+	Actions_after_crash     string // enum_on_crash_behaviour
 	
-	Consoles     string // 
+	Consoles     string // console_ref_set
 	
-	VIFs     string // 
+	VIFs     string // VIF_ref_set
 	
-	VBDs     string // 
+	VBDs     string // VBD_ref_set
 	
-	Crash_dumps     string // 
+	Crash_dumps     string // crashdump_ref_set
 	
-	VTPMs     string // 
+	VTPMs     string // VTPM_ref_set
 	
-	PV_bootloader     string // 
+	PV_bootloader     string
 	
-	PV_kernel     string // 
+	PV_kernel     string
 	
-	PV_ramdisk     string // 
+	PV_ramdisk     string
 	
-	PV_args     string // 
+	PV_args     string
 	
-	PV_bootloader_args     string // 
+	PV_bootloader_args     string
 	
-	PV_legacy_args     string // 
+	PV_legacy_args     string
 	
-	HVM_boot_policy     string // 
+	HVM_boot_policy     string
 	
-	HVM_boot_params     string // 
+	HVM_boot_params     string // string__string_map
 	
-	HVM_shadow_multiplier     string // 
+	HVM_shadow_multiplier     string // float
 	
-	Platform     string // 
+	Platform     string // string__string_map
 	
-	PCI_bus     string // 
+	PCI_bus     string
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Domid     string // 
+	Domid     string // int
 	
-	Domarch     string // 
+	Domarch     string
 	
-	Last_boot_CPU_flags     string // 
+	Last_boot_CPU_flags     string // string__string_map
 	
-	Is_control_domain     string // 
+	Is_control_domain     bool
 	
-	Metrics     string // 
+	Metrics     string // VM_metrics_ref
 	
-	Guest_metrics     string // 
+	Guest_metrics     string // VM_guest_metrics_ref
 	
-	Last_booted_record     string // 
+	Last_booted_record     string
 	
-	Recommendations     string // 
+	Recommendations     string
 	
-	Xenstore_data     string // 
+	Xenstore_data     string // string__string_map
 	
-	Ha_always_run     string // 
+	Ha_always_run     bool
 	
-	Ha_restart_priority     string // 
+	Ha_restart_priority     string
 	
-	Is_a_snapshot     string // 
+	Is_a_snapshot     bool
 	
-	Snapshot_of     string // 
+	Snapshot_of     string // VM_ref
 	
-	Snapshots     string // 
+	Snapshots     string // VM_ref_set
 	
-	Snapshot_time     string // 
+	Snapshot_time     string // datetime
 	
-	Transportable_snapshot_id     string // 
+	Transportable_snapshot_id     string
 	
-	Blobs     string // 
+	Blobs     string // string__blob_ref_map
 	
-	Tags     string // 
+	Tags     string // string_set
 	
-	Blocked_operations     string // 
+	Blocked_operations     string // enum_vm_operations__string_map
 	
-	Snapshot_info     string // 
+	Snapshot_info     string // string__string_map
 	
-	Snapshot_metadata     string // 
+	Snapshot_metadata     string
 	
-	Parent     string // 
+	Parent     string // VM_ref
 	
-	Children     string // 
+	Children     string // VM_ref_set
 	
-	Bios_strings     string // 
+	Bios_strings     string // string__string_map
 	
-	Protection_policy     string // 
+	Protection_policy     string // VMPP_ref
 	
-	Is_snapshot_from_vmpp     string // 
+	Is_snapshot_from_vmpp     bool
 	
-	Appliance     string // 
+	Appliance     string // VM_appliance_ref
 	
-	Start_delay     string // 
+	Start_delay     string // int
 	
-	Shutdown_delay     string // 
+	Shutdown_delay     string // int
 	
-	Order     string // 
+	Order     string // int
 	
-	VGPUs     string // 
+	VGPUs     string // VGPU_ref_set
 	
-	Attached_PCIs     string // 
+	Attached_PCIs     string // PCI_ref_set
 	
-	Suspend_SR     string // 
+	Suspend_SR     string // SR_ref
 	
-	Version     string // 
+	Version     string // int
 	
-	Generation_id     string // 
+	Generation_id     string
 	
 }
 
 // The metrics associated with a VM
 type VM_metrics struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Memory_actual     string // 
+	Memory_actual     string // int
 	
-	VCPUs_number     string // 
+	VCPUs_number     string // int
 	
-	VCPUs_utilisation     string // 
+	VCPUs_utilisation     string // int__float_map
 	
-	VCPUs_CPU     string // 
+	VCPUs_CPU     string // int__int_map
 	
-	VCPUs_params     string // 
+	VCPUs_params     string // string__string_map
 	
-	VCPUs_flags     string // 
+	VCPUs_flags     string // int__string_set_map
 	
-	State     string // 
+	State     string // string_set
 	
-	Start_time     string // 
+	Start_time     string // datetime
 	
-	Install_time     string // 
+	Install_time     string // datetime
 	
-	Last_updated     string // 
+	Last_updated     string // datetime
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // The metrics reported by the guest (as opposed to inferred from outside)
 type VM_guest_metrics struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Os_version     string // 
+	Os_version     string // string__string_map
 	
-	PV_drivers_version     string // 
+	PV_drivers_version     string // string__string_map
 	
-	PV_drivers_up_to_date     string // 
+	PV_drivers_up_to_date     bool
 	
-	Memory     string // 
+	Memory     string // string__string_map
 	
-	Disks     string // 
+	Disks     string // string__string_map
 	
-	Networks     string // 
+	Networks     string // string__string_map
 	
-	Other     string // 
+	Other     string // string__string_map
 	
-	Last_updated     string // 
+	Last_updated     string // datetime
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Live     string // 
+	Live     bool
 	
 }
 
 // VM Protection Policy
 type VMPP struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Is_policy_enabled     string // 
+	Is_policy_enabled     bool
 	
-	Backup_type     string // 
+	Backup_type     string // enum_vmpp_backup_type
 	
-	Backup_retention_value     string // 
+	Backup_retention_value     string // int
 	
-	Backup_frequency     string // 
+	Backup_frequency     string // enum_vmpp_backup_frequency
 	
-	Backup_schedule     string // 
+	Backup_schedule     string // string__string_map
 	
-	Is_backup_running     string // 
+	Is_backup_running     bool
 	
-	Backup_last_run_time     string // 
+	Backup_last_run_time     string // datetime
 	
-	Archive_target_type     string // 
+	Archive_target_type     string // enum_vmpp_archive_target_type
 	
-	Archive_target_config     string // 
+	Archive_target_config     string // string__string_map
 	
-	Archive_frequency     string // 
+	Archive_frequency     string // enum_vmpp_archive_frequency
 	
-	Archive_schedule     string // 
+	Archive_schedule     string // string__string_map
 	
-	Is_archive_running     string // 
+	Is_archive_running     bool
 	
-	Archive_last_run_time     string // 
+	Archive_last_run_time     string // datetime
 	
-	VMs     string // 
+	VMs     string // VM_ref_set
 	
-	Is_alarm_enabled     string // 
+	Is_alarm_enabled     bool
 	
-	Alarm_config     string // 
+	Alarm_config     string // string__string_map
 	
-	Recent_alerts     string // 
+	Recent_alerts     string // string_set
 	
 }
 
 // VM appliance
 type VM_appliance struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Allowed_operations     string // 
+	Allowed_operations     string // enum_vm_appliance_operation_set
 	
-	Current_operations     string // 
+	Current_operations     string // string__enum_vm_appliance_operation_map
 	
-	VMs     string // 
+	VMs     string // VM_ref_set
 	
 }
 
 // DR task
 type DR_task struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Introduced_SRs     string // 
+	Introduced_SRs     string // SR_ref_set
 	
 }
 
 // A physical host
-type host struct {
+type Host struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Memory_overhead     string // 
+	Memory_overhead     string // int
 	
-	Allowed_operations     string // 
+	Allowed_operations     string // enum_host_allowed_operations_set
 	
-	Current_operations     string // 
+	Current_operations     string // string__enum_host_allowed_operations_map
 	
-	API_version_major     string // 
+	API_version_major     string // int
 	
-	API_version_minor     string // 
+	API_version_minor     string // int
 	
-	API_version_vendor     string // 
+	API_version_vendor     string
 	
-	API_version_vendor_implementation     string // 
+	API_version_vendor_implementation     string // string__string_map
 	
-	Enabled     string // 
+	Enabled     bool
 	
-	Software_version     string // 
+	Software_version     string // string__string_map
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Capabilities     string // 
+	Capabilities     string // string_set
 	
-	Cpu_configuration     string // 
+	Cpu_configuration     string // string__string_map
 	
-	Sched_policy     string // 
+	Sched_policy     string
 	
-	Supported_bootloaders     string // 
+	Supported_bootloaders     string // string_set
 	
-	Resident_VMs     string // 
+	Resident_VMs     string // VM_ref_set
 	
-	Logging     string // 
+	Logging     string // string__string_map
 	
-	PIFs     string // 
+	PIFs     string // PIF_ref_set
 	
-	Suspend_image_sr     string // 
+	Suspend_image_sr     string // SR_ref
 	
-	Crash_dump_sr     string // 
+	Crash_dump_sr     string // SR_ref
 	
-	Crashdumps     string // 
+	Crashdumps     string // host_crashdump_ref_set
 	
-	Patches     string // 
+	Patches     string // host_patch_ref_set
 	
-	PBDs     string // 
+	PBDs     string // PBD_ref_set
 	
-	Host_CPUs     string // 
+	Host_CPUs     string // host_cpu_ref_set
 	
-	Cpu_info     string // 
+	Cpu_info     string // string__string_map
 	
-	Hostname     string // 
+	Hostname     string
 	
-	Address     string // 
+	Address     string
 	
-	Metrics     string // 
+	Metrics     string // host_metrics_ref
 	
-	License_params     string // 
+	License_params     string // string__string_map
 	
-	Ha_statefiles     string // 
+	Ha_statefiles     string // string_set
 	
-	Ha_network_peers     string // 
+	Ha_network_peers     string // string_set
 	
-	Blobs     string // 
+	Blobs     string // string__blob_ref_map
 	
-	Tags     string // 
+	Tags     string // string_set
 	
-	External_auth_type     string // 
+	External_auth_type     string
 	
-	External_auth_service_name     string // 
+	External_auth_service_name     string
 	
-	External_auth_configuration     string // 
+	External_auth_configuration     string // string__string_map
 	
-	Edition     string // 
+	Edition     string
 	
-	License_server     string // 
+	License_server     string // string__string_map
 	
-	Bios_strings     string // 
+	Bios_strings     string // string__string_map
 	
-	Power_on_mode     string // 
+	Power_on_mode     string
 	
-	Power_on_config     string // 
+	Power_on_config     string // string__string_map
 	
-	Local_cache_sr     string // 
+	Local_cache_sr     string // SR_ref
 	
-	Chipset_info     string // 
+	Chipset_info     string // string__string_map
 	
-	PCIs     string // 
+	PCIs     string // PCI_ref_set
 	
-	PGPUs     string // 
+	PGPUs     string // PGPU_ref_set
 	
-	Guest_VCPUs_params     string // 
+	Guest_VCPUs_params     string // string__string_map
 	
-	Display     string // 
+	Display     string // enum_host_display
 	
 }
 
 // Represents a host crash dump
-type host_crashdump struct {
+type Host_crashdump struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Host     string // 
+	Host     string // host_ref
 	
-	Timestamp     string // 
+	Timestamp     string // datetime
 	
-	Size     string // 
+	Size     string // int
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // Represents a patch stored on a server
-type host_patch struct {
+type Host_patch struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Version     string // 
+	Version     string
 	
-	Host     string // 
+	Host     string // host_ref
 	
-	Applied     string // 
+	Applied     bool
 	
-	Timestamp_applied     string // 
+	Timestamp_applied     string // datetime
 	
-	Size     string // 
+	Size     string // int
 	
-	Pool_patch     string // 
+	Pool_patch     string // pool_patch_ref
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // The metrics associated with a host
-type host_metrics struct {
+type Host_metrics struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Memory_total     string // 
+	Memory_total     string // int
 	
-	Memory_free     string // 
+	Memory_free     string // int
 	
-	Live     string // 
+	Live     bool
 	
-	Last_updated     string // 
+	Last_updated     string // datetime
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // A physical CPU
-type host_cpu struct {
+type Host_cpu struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Host     string // 
+	Host     string // host_ref
 	
-	Number     string // 
+	Number     string // int
 	
-	Vendor     string // 
+	Vendor     string
 	
-	Speed     string // 
+	Speed     string // int
 	
-	Modelname     string // 
+	Modelname     string
 	
-	Family     string // 
+	Family     string // int
 	
-	Model     string // 
+	Model     string // int
 	
-	Stepping     string // 
+	Stepping     string
 	
-	Flags     string // 
+	Flags     string
 	
-	Features     string // 
+	Features     string
 	
-	Utilisation     string // 
+	Utilisation     string // float
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // A virtual network
-type network struct {
+type Network struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Allowed_operations     string // 
+	Allowed_operations     string // enum_network_operations_set
 	
-	Current_operations     string // 
+	Current_operations     string // string__enum_network_operations_map
 	
-	VIFs     string // 
+	VIFs     string // VIF_ref_set
 	
-	PIFs     string // 
+	PIFs     string // PIF_ref_set
 	
-	MTU     string // 
+	MTU     string // int
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Bridge     string // 
+	Bridge     string
 	
-	Blobs     string // 
+	Blobs     string // string__blob_ref_map
 	
-	Tags     string // 
+	Tags     string // string_set
 	
-	Default_locking_mode     string // 
+	Default_locking_mode     string // enum_network_default_locking_mode
 	
-	Assigned_ips     string // 
+	Assigned_ips     string // VIF_ref__string_map
 	
 }
 
 // A virtual network interface
 type VIF struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Allowed_operations     string // 
+	Allowed_operations     string // enum_vif_operations_set
 	
-	Current_operations     string // 
+	Current_operations     string // string__enum_vif_operations_map
 	
-	Device     string // 
+	Device     string
 	
-	Network     string // 
+	Network     string // network_ref
 	
-	VM     string // 
+	VM     string // VM_ref
 	
-	MAC     string // 
+	MAC     string
 	
-	MTU     string // 
+	MTU     string // int
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Currently_attached     string // 
+	Currently_attached     bool
 	
-	Status_code     string // 
+	Status_code     string // int
 	
-	Status_detail     string // 
+	Status_detail     string
 	
-	Runtime_properties     string // 
+	Runtime_properties     string // string__string_map
 	
-	Qos_algorithm_type     string // 
+	Qos_algorithm_type     string
 	
-	Qos_algorithm_params     string // 
+	Qos_algorithm_params     string // string__string_map
 	
-	Qos_supported_algorithms     string // 
+	Qos_supported_algorithms     string // string_set
 	
-	Metrics     string // 
+	Metrics     string // VIF_metrics_ref
 	
-	MAC_autogenerated     string // 
+	MAC_autogenerated     bool
 	
-	Locking_mode     string // 
+	Locking_mode     string // enum_vif_locking_mode
 	
-	Ipv4_allowed     string // 
+	Ipv4_allowed     string // string_set
 	
-	Ipv6_allowed     string // 
+	Ipv6_allowed     string // string_set
 	
 }
 
 // The metrics associated with a virtual network device
 type VIF_metrics struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Io_read_kbs     string // 
+	Io_read_kbs     string // float
 	
-	Io_write_kbs     string // 
+	Io_write_kbs     string // float
 	
-	Last_updated     string // 
+	Last_updated     string // datetime
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // A physical network interface (note separate VLANs are represented as several PIFs)
 type PIF struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Device     string // 
+	Device     string
 	
-	Network     string // 
+	Network     string // network_ref
 	
-	Host     string // 
+	Host     string // host_ref
 	
-	MAC     string // 
+	MAC     string
 	
-	MTU     string // 
+	MTU     string // int
 	
-	VLAN     string // 
+	VLAN     string // int
 	
-	Metrics     string // 
+	Metrics     string // PIF_metrics_ref
 	
-	Physical     string // 
+	Physical     bool
 	
-	Currently_attached     string // 
+	Currently_attached     bool
 	
-	Ip_configuration_mode     string // 
+	Ip_configuration_mode     string // enum_ip_configuration_mode
 	
-	IP     string // 
+	IP     string
 	
-	Netmask     string // 
+	Netmask     string
 	
-	Gateway     string // 
+	Gateway     string
 	
-	DNS     string // 
+	DNS     string
 	
-	Bond_slave_of     string // 
+	Bond_slave_of     string // Bond_ref
 	
-	Bond_master_of     string // 
+	Bond_master_of     string // Bond_ref_set
 	
-	VLAN_master_of     string // 
+	VLAN_master_of     string // VLAN_ref
 	
-	VLAN_slave_of     string // 
+	VLAN_slave_of     string // VLAN_ref_set
 	
-	Management     string // 
+	Management     bool
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Disallow_unplug     string // 
+	Disallow_unplug     bool
 	
-	Tunnel_access_PIF_of     string // 
+	Tunnel_access_PIF_of     string // tunnel_ref_set
 	
-	Tunnel_transport_PIF_of     string // 
+	Tunnel_transport_PIF_of     string // tunnel_ref_set
 	
-	Ipv6_configuration_mode     string // 
+	Ipv6_configuration_mode     string // enum_ipv6_configuration_mode
 	
-	IPv6     string // 
+	IPv6     string // string_set
 	
-	Ipv6_gateway     string // 
+	Ipv6_gateway     string
 	
-	Primary_address_type     string // 
+	Primary_address_type     string // enum_primary_address_type
 	
-	Managed     string // 
+	Managed     bool
 	
-	Properties     string // 
+	Properties     string // string__string_map
 	
 }
 
 // The metrics associated with a physical network interface
 type PIF_metrics struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Io_read_kbs     string // 
+	Io_read_kbs     string // float
 	
-	Io_write_kbs     string // 
+	Io_write_kbs     string // float
 	
-	Carrier     string // 
+	Carrier     bool
 	
-	Vendor_id     string // 
+	Vendor_id     string
 	
-	Vendor_name     string // 
+	Vendor_name     string
 	
-	Device_id     string // 
+	Device_id     string
 	
-	Device_name     string // 
+	Device_name     string
 	
-	Speed     string // 
+	Speed     string // int
 	
-	Duplex     string // 
+	Duplex     bool
 	
-	Pci_bus_path     string // 
+	Pci_bus_path     string
 	
-	Last_updated     string // 
+	Last_updated     string // datetime
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // 
 type Bond struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Master     string // 
+	Master     string // PIF_ref
 	
-	Slaves     string // 
+	Slaves     string // PIF_ref_set
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Primary_slave     string // 
+	Primary_slave     string // PIF_ref
 	
-	Mode     string // 
+	Mode     string // enum_bond_mode
 	
-	Properties     string // 
+	Properties     string // string__string_map
 	
-	Links_up     string // 
+	Links_up     string // int
 	
 }
 
 // A VLAN mux/demux
 type VLAN struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Tagged_PIF     string // 
+	Tagged_PIF     string // PIF_ref
 	
-	Untagged_PIF     string // 
+	Untagged_PIF     string // PIF_ref
 	
-	Tag     string // 
+	Tag     string // int
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // A storage manager plugin
 type SM struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Type     string // 
+	Type     string
 	
-	Vendor     string // 
+	Vendor     string
 	
-	Copyright     string // 
+	Copyright     string
 	
-	Version     string // 
+	Version     string
 	
-	Required_api_version     string // 
+	Required_api_version     string
 	
-	Configuration     string // 
+	Configuration     string // string__string_map
 	
-	Capabilities     string // 
+	Capabilities     string // string_set
 	
-	Features     string // 
+	Features     string // string__int_map
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Driver_filename     string // 
+	Driver_filename     string
 	
 }
 
 // A storage repository
 type SR struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Allowed_operations     string // 
+	Allowed_operations     string // enum_storage_operations_set
 	
-	Current_operations     string // 
+	Current_operations     string // string__enum_storage_operations_map
 	
-	VDIs     string // 
+	VDIs     string // VDI_ref_set
 	
-	PBDs     string // 
+	PBDs     string // PBD_ref_set
 	
-	Virtual_allocation     string // 
+	Virtual_allocation     string // int
 	
-	Physical_utilisation     string // 
+	Physical_utilisation     string // int
 	
-	Physical_size     string // 
+	Physical_size     string // int
 	
-	Type     string // 
+	Type     string
 	
-	Content_type     string // 
+	Content_type     string
 	
-	Shared     string // 
+	Shared     bool
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Tags     string // 
+	Tags     string // string_set
 	
-	Sm_config     string // 
+	Sm_config     string // string__string_map
 	
-	Blobs     string // 
+	Blobs     string // string__blob_ref_map
 	
-	Local_cache_enabled     string // 
+	Local_cache_enabled     bool
 	
-	Introduced_by     string // 
+	Introduced_by     string // DR_task_ref
 	
 }
 
 // A virtual disk image
 type VDI struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Allowed_operations     string // 
+	Allowed_operations     string // enum_vdi_operations_set
 	
-	Current_operations     string // 
+	Current_operations     string // string__enum_vdi_operations_map
 	
-	SR     string // 
+	SR     string // SR_ref
 	
-	VBDs     string // 
+	VBDs     string // VBD_ref_set
 	
-	Crash_dumps     string // 
+	Crash_dumps     string // crashdump_ref_set
 	
-	Virtual_size     string // 
+	Virtual_size     string // int
 	
-	Physical_utilisation     string // 
+	Physical_utilisation     string // int
 	
-	Type     string // 
+	Type     string // enum_vdi_type
 	
-	Sharable     string // 
+	Sharable     bool
 	
-	Read_only     string // 
+	Read_only     bool
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Storage_lock     string // 
+	Storage_lock     bool
 	
-	Location     string // 
+	Location     string
 	
-	Managed     string // 
+	Managed     bool
 	
-	Missing     string // 
+	Missing     bool
 	
-	Parent     string // 
+	Parent     string // VDI_ref
 	
-	Xenstore_data     string // 
+	Xenstore_data     string // string__string_map
 	
-	Sm_config     string // 
+	Sm_config     string // string__string_map
 	
-	Is_a_snapshot     string // 
+	Is_a_snapshot     bool
 	
-	Snapshot_of     string // 
+	Snapshot_of     string // VDI_ref
 	
-	Snapshots     string // 
+	Snapshots     string // VDI_ref_set
 	
-	Snapshot_time     string // 
+	Snapshot_time     string // datetime
 	
-	Tags     string // 
+	Tags     string // string_set
 	
-	Allow_caching     string // 
+	Allow_caching     bool
 	
-	On_boot     string // 
+	On_boot     string // enum_on_boot
 	
-	Metadata_of_pool     string // 
+	Metadata_of_pool     string // pool_ref
 	
-	Metadata_latest     string // 
+	Metadata_latest     bool
 	
 }
 
 // A virtual block device
 type VBD struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Allowed_operations     string // 
+	Allowed_operations     string // enum_vbd_operations_set
 	
-	Current_operations     string // 
+	Current_operations     string // string__enum_vbd_operations_map
 	
-	VM     string // 
+	VM     string // VM_ref
 	
-	VDI     string // 
+	VDI     string // VDI_ref
 	
-	Device     string // 
+	Device     string
 	
-	Userdevice     string // 
+	Userdevice     string
 	
-	Bootable     string // 
+	Bootable     bool
 	
-	Mode     string // 
+	Mode     string // enum_vbd_mode
 	
-	Type     string // 
+	Type     string // enum_vbd_type
 	
-	Unpluggable     string // 
+	Unpluggable     bool
 	
-	Storage_lock     string // 
+	Storage_lock     bool
 	
-	Empty     string // 
+	Empty     bool
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Currently_attached     string // 
+	Currently_attached     bool
 	
-	Status_code     string // 
+	Status_code     string // int
 	
-	Status_detail     string // 
+	Status_detail     string
 	
-	Runtime_properties     string // 
+	Runtime_properties     string // string__string_map
 	
-	Qos_algorithm_type     string // 
+	Qos_algorithm_type     string
 	
-	Qos_algorithm_params     string // 
+	Qos_algorithm_params     string // string__string_map
 	
-	Qos_supported_algorithms     string // 
+	Qos_supported_algorithms     string // string_set
 	
-	Metrics     string // 
+	Metrics     string // VBD_metrics_ref
 	
 }
 
 // The metrics associated with a virtual block device
 type VBD_metrics struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Io_read_kbs     string // 
+	Io_read_kbs     string // float
 	
-	Io_write_kbs     string // 
+	Io_write_kbs     string // float
 	
-	Last_updated     string // 
+	Last_updated     string // datetime
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // The physical block devices through which hosts access SRs
 type PBD struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Host     string // 
+	Host     string // host_ref
 	
-	SR     string // 
+	SR     string // SR_ref
 	
-	Device_config     string // 
+	Device_config     string // string__string_map
 	
-	Currently_attached     string // 
+	Currently_attached     bool
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // A VM crashdump
-type crashdump struct {
+type Crashdump struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	VM     string // 
+	VM     string // VM_ref
 	
-	VDI     string // 
+	VDI     string // VDI_ref
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // A virtual TPM device
 type VTPM struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	VM     string // 
+	VM     string // VM_ref
 	
-	Backend     string // 
+	Backend     string // VM_ref
 	
 }
 
 // A console
-type console struct {
+type Console struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Protocol     string // 
+	Protocol     string // enum_console_protocol
 	
-	Location     string // 
+	Location     string
 	
-	VM     string // 
+	VM     string // VM_ref
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // A user of the system
-type user struct {
+type User struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Short_name     string // 
+	Short_name     string
 	
-	Fullname     string // 
+	Fullname     string
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // Data sources for logging in RRDs
-type data_source struct {
+type Data_source struct {
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Enabled     string // 
+	Enabled     bool
 	
-	Standard     string // 
+	Standard     bool
 	
-	Units     string // 
+	Units     string
 	
-	Min     string // 
+	Min     string // float
 	
-	Max     string // 
+	Max     string // float
 	
-	Value     string // 
+	Value     string // float
 	
 }
 
 // A placeholder for a binary blob
-type blob struct {
+type Blob struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	Size     string // 
+	Size     string // int
 	
-	Public     string // 
+	Public     bool
 	
-	Last_updated     string // 
+	Last_updated     string // datetime
 	
-	Mime_type     string // 
+	Mime_type     string
 	
 }
 
 // An message for the attention of the administrator
-type message struct {
+type Message struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name     string // 
+	Name     string
 	
-	Priority     string // 
+	Priority     string // int
 	
-	Cls     string // 
+	Cls     string // enum_cls
 	
-	Obj_uuid     string // 
+	Obj_uuid     string
 	
-	Timestamp     string // 
+	Timestamp     string // datetime
 	
-	Body     string // 
+	Body     string
 	
 }
 
 // A secret
-type secret struct {
+type Secret struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Value     string // 
+	Value     string
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // A tunnel for network traffic
-type tunnel struct {
+type Tunnel struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Access_PIF     string // 
+	Access_PIF     string // PIF_ref
 	
-	Transport_PIF     string // 
+	Transport_PIF     string // PIF_ref
 	
-	Status     string // 
+	Status     string // string__string_map
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
 }
 
 // A PCI device
 type PCI struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Class_name     string // 
+	Class_name     string
 	
-	Vendor_name     string // 
+	Vendor_name     string
 	
-	Device_name     string // 
+	Device_name     string
 	
-	Host     string // 
+	Host     string // host_ref
 	
-	Pci_id     string // 
+	Pci_id     string
 	
-	Dependencies     string // 
+	Dependencies     string // PCI_ref_set
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Subsystem_vendor_name     string // 
+	Subsystem_vendor_name     string
 	
-	Subsystem_device_name     string // 
+	Subsystem_device_name     string
 	
 }
 
 // A physical GPU (pGPU)
 type PGPU struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	PCI     string // 
+	PCI     string // PCI_ref
 	
-	GPU_group     string // 
+	GPU_group     string // GPU_group_ref
 	
-	Host     string // 
+	Host     string // host_ref
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Supported_VGPU_types     string // 
+	Supported_VGPU_types     string // VGPU_type_ref_set
 	
-	Enabled_VGPU_types     string // 
+	Enabled_VGPU_types     string // VGPU_type_ref_set
 	
-	Resident_VGPUs     string // 
+	Resident_VGPUs     string // VGPU_ref_set
 	
-	Supported_VGPU_max_capacities     string // 
+	Supported_VGPU_max_capacities     string // VGPU_type_ref__int_map
 	
-	Dom0_access     string // 
+	Dom0_access     string // enum_pgpu_dom0_access
 	
-	Is_system_display_device     string // 
+	Is_system_display_device     bool
 	
 }
 
 // A group of compatible GPUs across the resource pool
 type GPU_group struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Name_label     string // 
+	Name_label     string
 	
-	Name_description     string // 
+	Name_description     string
 	
-	PGPUs     string // 
+	PGPUs     string // PGPU_ref_set
 	
-	VGPUs     string // 
+	VGPUs     string // VGPU_ref_set
 	
-	GPU_types     string // 
+	GPU_types     string // string_set
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Allocation_algorithm     string // 
+	Allocation_algorithm     string // enum_allocation_algorithm
 	
-	Supported_VGPU_types     string // 
+	Supported_VGPU_types     string // VGPU_type_ref_set
 	
-	Enabled_VGPU_types     string // 
+	Enabled_VGPU_types     string // VGPU_type_ref_set
 	
 }
 
 // A virtual GPU (vGPU)
 type VGPU struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	VM     string // 
+	VM     string // VM_ref
 	
-	GPU_group     string // 
+	GPU_group     string // GPU_group_ref
 	
-	Device     string // 
+	Device     string
 	
-	Currently_attached     string // 
+	Currently_attached     bool
 	
-	Other_config     string // 
+	Other_config     string // string__string_map
 	
-	Type     string // 
+	Type     string // VGPU_type_ref
 	
-	Resident_on     string // 
+	Resident_on     string // PGPU_ref
 	
 }
 
 // A type of virtual GPU
 type VGPU_type struct {
 	
-	Uuid     string // 
+	Uuid     string
 	
-	Vendor_name     string // 
+	Vendor_name     string
 	
-	Model_name     string // 
+	Model_name     string
 	
-	Framebuffer_size     string // 
+	Framebuffer_size     string // int
 	
-	Max_heads     string // 
+	Max_heads     string // int
 	
-	Max_resolution_x     string // 
+	Max_resolution_x     string // int
 	
-	Max_resolution_y     string // 
+	Max_resolution_y     string // int
 	
-	Supported_on_PGPUs     string // 
+	Supported_on_PGPUs     string // PGPU_ref_set
 	
-	Enabled_on_PGPUs     string // 
+	Enabled_on_PGPUs     string // PGPU_ref_set
 	
-	VGPUs     string // 
+	VGPUs     string // VGPU_ref_set
 	
-	Supported_on_GPU_groups     string // 
+	Supported_on_GPU_groups     string // GPU_group_ref_set
 	
-	Enabled_on_GPU_groups     string // 
+	Enabled_on_GPU_groups     string // GPU_group_ref_set
 	
 }
 
