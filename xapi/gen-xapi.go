@@ -42,6 +42,17 @@ type XapiParam struct {
 
 func (name XapiName) String() string {
 	s := string(name)
+
+	s = strings.Replace(s, "_h", "H", -1)
+	s = strings.Replace(s, "_u", "U", -1)
+	s = strings.Replace(s, "_a", "A", -1)
+	s = strings.Replace(s, "_c", "C", -1)
+	s = strings.Replace(s, "_l", "L", -1)
+	s = strings.Replace(s, "_s", "S", -1)
+	s = strings.Replace(s, "_n", "N", -1)
+	s = strings.Replace(s, "_t", "T", -1)
+	s = strings.Replace(s, "_p", "P", -1)
+
 	return strings.Title(s)
 }
 
