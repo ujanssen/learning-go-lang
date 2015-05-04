@@ -1,0 +1,18 @@
+package main
+
+import (
+	"fmt"
+)
+
+{{range .Xapi}}
+// {{ .Description }}
+type {{ .Name }} struct {
+	{{range .Fields}}
+	x_{{ .Name }}     string // {{/* .Type */}}
+	{{end}}
+}
+{{end}}
+
+func main() {
+		fmt.Println("it compiles")
+}
