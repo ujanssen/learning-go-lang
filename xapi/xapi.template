@@ -13,9 +13,11 @@ type {{ .Name }} struct {
 	{{range .Fields}}{{ .Name }}     {{ .Type }}
 	{{end}}
 }
-{{range .Messages}}func ({{ $xtype }} *{{ $xtype }}) {{ .Name }}() {
+{{range .Messages}}
+{{if eq .Name "login_with_password" }}
+func ({{ $xtype }} *{{ $xtype }}) {{ .Name }}() {
 }
-{{end}}{{end}}{{end}}
+{{end}}{{end}}{{end}}{{end}}
 
 func main() {
 		fmt.Println("it compiles")
