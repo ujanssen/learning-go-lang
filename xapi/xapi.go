@@ -23,17 +23,7 @@ type Session struct {
 	Originator       string
 }
 
-func (Session *Session) login_with_password(
-
-	uname string,
-
-	pwd string,
-
-	version string,
-
-	originator string,
-
-) {
+func (Session *Session) login_with_password(uname string, pwd string, version string, originator string) {
 }
 
 func main() {
