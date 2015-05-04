@@ -50,11 +50,16 @@ func (name XapiTypeName) String() string {
 	if s == "string" || s == "bool" {
 		return s
 	}
+	s = strings.Replace(s, " ", "_", -1)
 	s = strings.Replace(s, "(", "", -1)
 	s = strings.Replace(s, ")", "", -1)
 	s = strings.Replace(s, "->", "", -1)
 
-	return "string // " + strings.Replace(s, " ", "_", -1)
+	if s == "string__string_map" {
+		return "map[string]string"
+	}
+
+	return "string // " + s
 }
 
 type XapiName string
