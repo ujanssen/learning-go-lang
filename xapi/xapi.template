@@ -4,14 +4,15 @@ import (
 	"fmt"
 )
 
+
 {{range .Xapi}}
+{{if eq .Name "session" }}
 // {{ .Description }}
 type {{ .Name }} struct {
-	{{range .Fields}}
-	{{ .Name }}     {{ .Type }}
+	{{range .Fields}}{{ .Name }}     {{ .Type }}
 	{{end}}
 }
-{{end}}
+{{end}}{{end}}
 
 func main() {
 		fmt.Println("it compiles")
