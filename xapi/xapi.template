@@ -7,12 +7,15 @@ import (
 
 {{range .Xapi}}
 {{if eq .Name "session" }}
+{{ $xtype := .Name }}
 // {{ .Description }}
 type {{ .Name }} struct {
 	{{range .Fields}}{{ .Name }}     {{ .Type }}
 	{{end}}
 }
-{{end}}{{end}}
+{{range .Messages}}func ({{ $xtype }} *{{ $xtype }}) {{ .Name }}() {
+}
+{{end}}{{end}}{{end}}
 
 func main() {
 		fmt.Println("it compiles")
