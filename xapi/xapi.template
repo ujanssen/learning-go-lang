@@ -59,7 +59,6 @@ func (c *XenAPIClient) RPCCall(method string, argi ...interface{}) (resultValue 
 {{ $objectName := .Name }}
 // {{ .Description }}
 {{range .Messages}}
-{{ $message := . }}
 func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}} {{ .Type }},{{end}}) (i interface{}, err error){
 	return client.RPCCall("{{$objectName}}.{{.Name}}", {{range .Params }}{{.Name}},{{end}})
 }
