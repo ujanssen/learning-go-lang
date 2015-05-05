@@ -95,7 +95,7 @@ type session struct {
 	originator       string
 }
 
-func (client *XenAPIClient) login_with_password(uname string, pwd string, version string, originator string) (resultValue interface{}, err error) {
+func (client *XenAPIClient) session_login_with_password(uname string, pwd string, version string, originator string) (resultValue interface{}, err error) {
 	result := xmlrpc.Struct{}
 
 	params := make([]interface{}, 4)
@@ -137,7 +137,7 @@ func main() {
 	fmt.Println("NewXenAPIClient for: " + client.Host)
 	fmt.Println("login_with_password: " + user + "/" + passwd)
 
-	session, err := client.login_with_password(user, passwd, "", "")
+	session, err := client.session_login_with_password(user, passwd, "", "")
 	fmt.Printf("err: %v\n", err)
 	fmt.Printf("session: %+v\n", session)
 

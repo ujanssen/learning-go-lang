@@ -87,7 +87,7 @@ type {{ .Name }} struct {
 {{range .Messages}}
 {{ $message := . }}
 {{if eq .Name "login_with_password" }}
-func (client *XenAPIClient) {{ .Name }}({{range .Params}}{{ .Name }} {{ .Type }},{{end}})  (resultValue interface{}, err error){
+func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}} {{ .Type }},{{end}})  (resultValue interface{}, err error){
 	result := xmlrpc.Struct{}
 
     params := make([]interface{}, {{ $message.ParamsLen }})
@@ -127,7 +127,7 @@ func main() {
 	fmt.Println("NewXenAPIClient for: " + client.Host)
 	fmt.Println("login_with_password: " + user + "/" + passwd)
 
-	session, err := client.login_with_password(user, passwd, "", "")
+	session, err := client.session_login_with_password(user, passwd, "", "")
 	fmt.Printf("err: %v\n", err)
 	fmt.Printf("session: %+v\n", session)
 
