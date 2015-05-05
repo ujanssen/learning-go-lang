@@ -18,6 +18,7 @@ type XenAPIClient struct {
 }
 
 func NewXenAPIClient(host string) (client XenAPIClient) {
+	client.Host = host
 	client.Url = "http://" + host
 	client.RPC, _ = xmlrpc.NewClient(client.Url, nil)
 	return
