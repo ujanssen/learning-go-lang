@@ -15,21 +15,21 @@ type Xapi struct {
 
 type XapiObject struct {
 	Name        XapiName
-	Description string
+	Description XapiDescr
 	Fields      []XapiField
 	Messages    []XapiMessage
 }
 
 type XapiField struct {
 	Name        XapiName
-	Description string
+	Description XapiDescr
 	Type        XapiTypeName
 	Qualifier   string
 }
 
 type XapiMessage struct {
 	Name        string
-	Description string
+	Description XapiDescr
 	Params      []XapiParam
 	Result      []string
 }
@@ -37,7 +37,7 @@ type XapiMessage struct {
 type XapiParam struct {
 	Name XapiParamName
 	Type XapiTypeName
-	Doc  string
+	Doc  XapiDescr
 }
 
 func (message XapiMessage) ParamsLen() int {
@@ -79,9 +79,16 @@ func (name XapiTypeName) String() string {
 	return "interface{}"
 }
 
+func (name XapiDescr) String() string {
+	s := string(name)
+	s = strings.Replace(s, "\n", "\n// ", -1)
+	return s
+}
+
 type XapiName string
 type XapiTypeName string
 type XapiParamName string
+type XapiDescr string
 
 func main() {
 	file, e := ioutil.ReadFile("./xapi.json")
