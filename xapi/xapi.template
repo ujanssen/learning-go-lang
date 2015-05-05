@@ -55,26 +55,12 @@ func (c *XenAPIClient) RPCCall(method string, argi ...interface{}) (resultValue 
     }
     return resultValue, err
 }
-/*
-func (c *XenAPIClient) RPCCall(method string, params []interface{}) (resultValue interface{}, err error) {
-    result := xmlrpc.Struct{}
-    p := new(xmlrpc.Params)
-    p.Params = params
-    err = c.RPC.Call(method, *p, &result)
-    if err != nil {
-        fmt.Errorf("RPC Call Error: %s", err)
-    } else {
-        resultValue = result["Value"]
-    }
-    return resultValue, err
-}
-*/
 {{range .XapiObjects}}
 {{ $objectName := .Name }}
 // {{ .Description }}
 {{range .Messages}}
 {{ $message := . }}
-func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}} {{ .Type }},{{end}})  (resultValue interface{}, err error){
+func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}} {{ .Type }},{{end}}) (i interface{}, err error){
 	return client.RPCCall("{{$objectName}}.{{.Name}}", {{range .Params }}{{.Name}},{{end}})
 }
 {{end}}{{end}}
