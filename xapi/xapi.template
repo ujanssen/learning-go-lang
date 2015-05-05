@@ -79,28 +79,32 @@ func (c *XenAPIClient) RPCCall(method string, argi ...interface{}) (resultValue 
 }
 
 func main() {
-	fmt.Println("it compiles")
-	host, user, passwd := os.Getenv(XS_HOST), os.Getenv(XS_USER), os.Getenv(XS_PASSWD)
-	client := NewXenAPIClient(host)
+    host, user, passwd := os.Getenv(XS_HOST), os.Getenv(XS_USER), os.Getenv(XS_PASSWD)
+    client := NewXenAPIClient(host)
 
-	fmt.Println("NewXenAPIClient for: " + client.Host)
-	fmt.Println("login_with_password: " + user + "/" + passwd)
+    fmt.Println("NewXenAPIClient for: " + client.Host)
+    fmt.Println("login_with_password: " + user + "/" + passwd)
 
-	session, err := client.session_login_with_password(user, passwd, "", "")
-	fmt.Printf("err: %v\n", err)
-	fmt.Printf("session: %+v\n", session)
+    session, err := client.session_login_with_password(user, passwd, "", "")
+    if err != nil {
+        fmt.Printf("err: %v\n", err)
+    }
 
     vms, err := client.VM_get_all(session)
-    fmt.Printf("err: %v\n", err)
-    fmt.Printf("vms: %+v\n", vms)
 
-    res, err := client.session_local_logout(session)
-    fmt.Printf("err: %v\n", err)
-    fmt.Printf("res: %+v\n", res)
+    // list running VMs
+    for _, vm := range vms.([]interface{}) {
+        ps, err := client.VM_get_power_state(session, vm)
+        if err != nil {
+            fmt.Printf("err: %v\n", err)
+        }
+        if ps.(string) == "Running" {
+            fmt.Printf("%+v VM_get_power_state: %+v\n", vm, ps)
+        }
+    }
 
- //    client.Username=user
- //    client.Password=passwd
-	// err = client.Login()
-	// fmt.Printf("err: %v\n", err)
-	// fmt.Printf("session: %+v\n", client.Session)
+    _, err = client.session_local_logout(session)
+    if err != nil {
+        fmt.Printf("err: %v\n", err)
+    }
 }
