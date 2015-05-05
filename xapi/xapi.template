@@ -10,9 +10,14 @@ import (
 {{ $objectName := .Name }}
 {{range .Messages}}
 // {{$objectName}}_{{.Name}}
+//
 // {{ .Description }}
-// {{range .Params }}
+//
+// params:{{range .Params }}
 // - {{.Name}}, {{.Type}}, {{.Doc}}{{end}}
+//
+// returns:{{range .Result }}
+// - {{.}}{{end}}
 func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}} {{ .Type }},{{end}}) (i interface{}, err error){
 	return client.RPCCall("{{$objectName}}.{{.Name}}", {{range .Params }}{{.Name}},{{end}})
 }
