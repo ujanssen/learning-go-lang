@@ -78,7 +78,7 @@ func (client *XenAPIClient) APICall(result *APIResult, method string, params ...
 
 {{range .XapiObjects}}
 {{if eq .Name "session" }}
-{{ $xtype := .Name }}
+{{ $objectName := .Name }}
 // {{ .Description }}
 type {{ .Name }} struct {
 	{{range .Fields}}{{ .Name }}     {{ .Type }}
@@ -94,7 +94,7 @@ func (client *XenAPIClient) {{ .Name }}({{range .Params}}{{ .Name }} {{ .Type }}
     {{range $index, $element := .Params }}
     params[{{$index}}] = {{$element.Name}}{{end}}
 
-	err = client.RPCCall(&result, "session.login_with_password", params)
+	err = client.RPCCall(&result, "{{$objectName}}.{{.Name}}", params)
 	resultValue = result["Value"]
 
 	return resultValue, err

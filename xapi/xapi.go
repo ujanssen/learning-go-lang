@@ -77,22 +77,22 @@ func (client *XenAPIClient) APICall(result *APIResult, method string, params ...
 }
 
 // A session
-type Session struct {
-	Uuid             string
-	ThisHost         string // host_ref
-	ThisUser         string // user_ref
-	LastActive       string // datetime
-	Pool             bool
-	OtherConfig      map[string]string
-	IsLocalSuperuser bool
-	Subject          string // subject_ref
-	ValidationTime   string // datetime
-	AuthUserSid      string
-	AuthUserName     string
-	RbacPermissions  string // string_set
-	Tasks            string // task_ref_set
-	Parent           string // session_ref
-	Originator       string
+type session struct {
+	uuid             string
+	thisHost         string // host_ref
+	thisUser         string // user_ref
+	lastActive       string // datetime
+	pool             bool
+	otherConfig      map[string]string
+	isLocalSuperuser bool
+	subject          string // subject_ref
+	validationTime   string // datetime
+	authUserSid      string
+	authUserName     string
+	rbacPermissions  string // string_set
+	tasks            string // task_ref_set
+	parent           string // session_ref
+	originator       string
 }
 
 func (client *XenAPIClient) login_with_password(uname string, pwd string, version string, originator string) (resultValue interface{}, err error) {

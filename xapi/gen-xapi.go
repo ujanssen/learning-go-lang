@@ -10,10 +10,10 @@ import (
 )
 
 type Xapi struct {
-	XapiObjects []XapiType
+	XapiObjects []XapiObject
 }
 
-type XapiType struct {
+type XapiObject struct {
 	Name        XapiName
 	Description string
 	Fields      []XapiField
@@ -56,7 +56,7 @@ func (name XapiName) String() string {
 	s = strings.Replace(s, "_t", "T", -1)
 	s = strings.Replace(s, "_p", "P", -1)
 
-	return strings.Title(s)
+	return s
 }
 
 func (name XapiTypeName) String() string {
