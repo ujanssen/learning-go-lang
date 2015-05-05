@@ -57,9 +57,7 @@ func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}}
     {{range $index, $element := .Params }}
     params[{{$index}}] = {{$element.Name}}{{end}}
 
-	resultValue, err = client.RPCCall("{{$objectName}}.{{.Name}}", params)
-
-	return resultValue, err
+	return client.RPCCall("{{$objectName}}.{{.Name}}", params)
 }
 {{end}}{{end}}
 
