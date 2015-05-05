@@ -77,16 +77,10 @@ func (client *XenAPIClient) APICall(result *APIResult, method string, params ...
 
 
 {{range .XapiObjects}}
-{{if eq .Name "session" }}
 {{ $objectName := .Name }}
 // {{ .Description }}
-type {{ .Name }} struct {
-	{{range .Fields}}{{ .Name }}     {{ .Type }}
-	{{end}}
-}
 {{range .Messages}}
 {{ $message := . }}
-{{if eq .Name "login_with_password" }}
 func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}} {{ .Type }},{{end}})  (resultValue interface{}, err error){
 	result := xmlrpc.Struct{}
 
@@ -99,27 +93,7 @@ func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}}
 
 	return resultValue, err
 }
-{{end}}{{end}}{{end}}
-
-{{if eq .Name "VM" }}
-{{ $objectName := .Name }}
-{{range .Messages}}
-{{ $message := . }}
-{{if eq .Name "get_all" }}
-func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}} {{ .Type }},{{end}})  (resultValue interface{}, err error){
-    result := xmlrpc.Struct{}
-
-    params := make([]interface{}, {{ $message.ParamsLen }})
-    {{range $index, $element := .Params }}
-    params[{{$index}}] = {{$element.Name}}{{end}}
-
-    err = client.RPCCall(&result, "{{$objectName}}.{{.Name}}", params)
-    resultValue = result["Value"]
-
-    return resultValue, err
-}
-
-{{end}}{{end}}{{end}}{{end}}
+{{end}}{{end}}
 
 const (
 	XS_HOST   = "XS_HOST"

@@ -35,7 +35,7 @@ type XapiMessage struct {
 }
 
 type XapiParam struct {
-	Name string
+	Name XapiParamName
 	Type XapiTypeName
 	Doc  string
 }
@@ -59,6 +59,13 @@ func (name XapiName) String() string {
 	return s
 }
 
+func (name XapiParamName) String() string {
+	s := string(name)
+	if s == "type" || s == "interface" {
+		return "a_" + s
+	}
+	return s
+}
 func (name XapiTypeName) String() string {
 	s := string(name)
 	if s == "string" || s == "bool" {
@@ -69,12 +76,12 @@ func (name XapiTypeName) String() string {
 	if s == "(string_->_string)_map" {
 		return "map[string]string"
 	}
-
 	return "interface{}"
 }
 
 type XapiName string
 type XapiTypeName string
+type XapiParamName string
 
 func main() {
 	file, e := ioutil.ReadFile("./xapi.json")
