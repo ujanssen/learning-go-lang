@@ -1,5 +1,5 @@
 {
-    "xapi": [
+    "XapiObjects": [
   {
     "name": "session",
     "description": "A session",

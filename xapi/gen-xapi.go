@@ -10,7 +10,7 @@ import (
 )
 
 type XapiTypes struct {
-	Xapi []XapiType
+	XapiObjects []XapiType
 }
 
 type XapiType struct {

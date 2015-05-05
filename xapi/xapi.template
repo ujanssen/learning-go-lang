@@ -76,7 +76,7 @@ func (client *XenAPIClient) APICall(result *APIResult, method string, params ...
 }
 
 
-{{range .Xapi}}
+{{range .XapiObjects}}
 {{if eq .Name "session" }}
 {{ $xtype := .Name }}
 // {{ .Description }}
