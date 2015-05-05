@@ -70,7 +70,7 @@ func (name XapiTypeName) String() string {
 		return "map[string]string"
 	}
 
-	return "string // " + s
+	return "interface{}"
 }
 
 type XapiName string

@@ -79,19 +79,19 @@ func (client *XenAPIClient) APICall(result *APIResult, method string, params ...
 // A session
 type session struct {
 	uuid             string
-	thisHost         string // host_ref
-	thisUser         string // user_ref
-	lastActive       string // datetime
+	thisHost         interface{}
+	thisUser         interface{}
+	lastActive       interface{}
 	pool             bool
 	otherConfig      map[string]string
 	isLocalSuperuser bool
-	subject          string // subject_ref
-	validationTime   string // datetime
+	subject          interface{}
+	validationTime   interface{}
 	authUserSid      string
 	authUserName     string
-	rbacPermissions  string // string_set
-	tasks            string // task_ref_set
-	parent           string // session_ref
+	rbacPermissions  interface{}
+	tasks            interface{}
+	parent           interface{}
 	originator       string
 }
 
@@ -111,11 +111,12 @@ func (client *XenAPIClient) session_login_with_password(uname string, pwd string
 	return resultValue, err
 }
 
-func (client *XenAPIClient) GetALL(session interface{}) (resultValue interface{}, err error) {
+func (client *XenAPIClient) VM_get_all(session_id interface{}) (resultValue interface{}, err error) {
 	result := xmlrpc.Struct{}
 
 	params := make([]interface{}, 1)
-	params[0] = session
+
+	params[0] = session_id
 
 	err = client.RPCCall(&result, "VM.get_all", params)
 	resultValue = result["Value"]
@@ -141,7 +142,7 @@ func main() {
 	fmt.Printf("err: %v\n", err)
 	fmt.Printf("session: %+v\n", session)
 
-	vms, err := client.GetALL(session)
+	vms, err := client.VM_get_all(session)
 	fmt.Printf("err: %v\n", err)
 	fmt.Printf("vms: %+v\n", vms)
 

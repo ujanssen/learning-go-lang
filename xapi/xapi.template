@@ -99,19 +99,27 @@ func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}}
 
 	return resultValue, err
 }
-{{end}}{{end}}{{end}}{{end}}
+{{end}}{{end}}{{end}}
 
-func (client *XenAPIClient) GetALL(session interface{}) (resultValue interface{}, err error){
-	result := xmlrpc.Struct{}
+{{if eq .Name "VM" }}
+{{ $objectName := .Name }}
+{{range .Messages}}
+{{ $message := . }}
+{{if eq .Name "get_all" }}
+func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}} {{ .Type }},{{end}})  (resultValue interface{}, err error){
+    result := xmlrpc.Struct{}
 
-	params := make([]interface{}, 1)
-	params[0] = session
+    params := make([]interface{}, {{ $message.ParamsLen }})
+    {{range $index, $element := .Params }}
+    params[{{$index}}] = {{$element.Name}}{{end}}
 
-	err = client.RPCCall(&result, "VM.get_all", params)
+    err = client.RPCCall(&result, "{{$objectName}}.{{.Name}}", params)
     resultValue = result["Value"]
 
     return resultValue, err
 }
+
+{{end}}{{end}}{{end}}{{end}}
 
 const (
 	XS_HOST   = "XS_HOST"
@@ -131,7 +139,7 @@ func main() {
 	fmt.Printf("err: %v\n", err)
 	fmt.Printf("session: %+v\n", session)
 
-    vms, err := client.GetALL(session)
+    vms, err := client.VM_get_all(session)
     fmt.Printf("err: %v\n", err)
     fmt.Printf("vms: %+v\n", vms)
 
