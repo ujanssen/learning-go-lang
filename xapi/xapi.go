@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"github.com/nilshell/xmlrpc"
 	"os"
@@ -106,33 +105,22 @@ func (client *XenAPIClient) login_with_password(uname string, pwd string, versio
 	params[2] = version
 	params[3] = originator
 
-	//	params := make([]interface{}, 2)
-	//	params[0] = client.Username
-	//	params[1] = client.Password
-
 	err = client.RPCCall(&result, "session.login_with_password", params)
 	resultValue = result["Value"]
 
 	return resultValue, err
 }
 
-func (client *XenAPIClient) Login() (err error) {
-	//Do loging call
+func (client *XenAPIClient) GetALL(session interface{}) (resultValue interface{}, err error) {
 	result := xmlrpc.Struct{}
 
-	params := make([]interface{}, 2)
-	params[0] = client.Username
-	params[1] = client.Password
+	params := make([]interface{}, 1)
+	params[0] = session
 
-	err = client.RPCCall(&result, "session.login_with_password", params)
-	if err == nil {
-		// err might not be set properly, so check the reference
-		if result["Value"] == nil {
-			return errors.New("Invalid credentials supplied")
-		}
-	}
-	client.Session = result["Value"]
-	return err
+	err = client.RPCCall(&result, "VM.get_all", params)
+	resultValue = result["Value"]
+
+	return resultValue, err
 }
 
 const (
@@ -145,8 +133,6 @@ func main() {
 	fmt.Println("it compiles")
 	host, user, passwd := os.Getenv(XS_HOST), os.Getenv(XS_USER), os.Getenv(XS_PASSWD)
 	client := NewXenAPIClient(host)
-	client.Username = user
-	client.Password = passwd
 
 	fmt.Println("NewXenAPIClient for: " + client.Host)
 	fmt.Println("login_with_password: " + user + "/" + passwd)
@@ -155,7 +141,13 @@ func main() {
 	fmt.Printf("err: %v\n", err)
 	fmt.Printf("session: %+v\n", session)
 
-	err = client.Login()
+	vms, err := client.GetALL(session)
 	fmt.Printf("err: %v\n", err)
-	fmt.Printf("session: %+v\n", client.Session)
+	fmt.Printf("vms: %+v\n", vms)
+
+	//    client.Username=user
+	//    client.Password=passwd
+	// err = client.Login()
+	// fmt.Printf("err: %v\n", err)
+	// fmt.Printf("session: %+v\n", client.Session)
 }
