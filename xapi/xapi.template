@@ -6,32 +6,49 @@ import (
 	"github.com/nilshell/xmlrpc"
 )
 
+{{range .XapiObjects}}
+{{ $objectName := .Name }}
+{{range .Messages}}
+// {{$objectName}}_{{.Name}}
+// {{ .Description }}
+// {{range .Params }}
+// - {{.Name}}, {{.Type}}, {{.Doc}}{{end}}
+func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}} {{ .Type }},{{end}}) (i interface{}, err error){
+	return client.RPCCall("{{$objectName}}.{{.Name}}", {{range .Params }}{{.Name}},{{end}})
+}
+{{end}}{{end}}
+
+const (
+	XS_HOST   = "XS_HOST"
+	XS_USER   = "XS_USER"
+	XS_PASSWD = "XS_PASSWD"
+)
 
 type XenAPIClient struct {
-	Session  interface{}
-	Host     string
-	Url      string
-	Username string
-	Password string
-	RPC      *xmlrpc.Client
+    Session  interface{}
+    Host     string
+    Url      string
+    Username string
+    Password string
+    RPC      *xmlrpc.Client
 }
 
 func NewXenAPIClient(host string) (client XenAPIClient) {
-	client.Host = host
-	client.Url = "http://" + host
-	client.RPC, _ = xmlrpc.NewClient(client.Url, nil)
-	return
+    client.Host = host
+    client.Url = "http://" + host
+    client.RPC, _ = xmlrpc.NewClient(client.Url, nil)
+    return
 }
 
 type APIResult struct {
-	Status           string
-	Value            interface{}
-	ErrorDescription string
+    Status           string
+    Value            interface{}
+    ErrorDescription string
 }
 
 type XenAPIObject struct {
-	Ref    string
-	Client *XenAPIClient
+    Ref    string
+    Client *XenAPIClient
 }
 
 func (c *XenAPIClient) RPCCall(method string, argi ...interface{}) (resultValue interface{}, err error) {
@@ -55,21 +72,6 @@ func (c *XenAPIClient) RPCCall(method string, argi ...interface{}) (resultValue 
     }
     return resultValue, err
 }
-
-{{range .XapiObjects}}
-{{ $objectName := .Name }}
-{{range .Messages}}
-// {{ .Description }}
-func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}} {{ .Type }},{{end}}) (i interface{}, err error){
-	return client.RPCCall("{{$objectName}}.{{.Name}}", {{range .Params }}{{.Name}},{{end}})
-}
-{{end}}{{end}}
-
-const (
-	XS_HOST   = "XS_HOST"
-	XS_USER   = "XS_USER"
-	XS_PASSWD = "XS_PASSWD"
-)
 
 func main() {
 	fmt.Println("it compiles")
