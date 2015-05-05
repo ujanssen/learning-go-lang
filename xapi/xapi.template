@@ -141,7 +141,7 @@ func main() {
 	fmt.Println("NewXenAPIClient for: " + client.Host)
 	fmt.Println("login_with_password: " + user + "/" + passwd)
 
-	session, err := client.login_with_password(XS_USER, XS_PASSWD, "", "")
+	session, err := client.login_with_password(user, passwd, "", "")
 	fmt.Printf("err: %v\n", err)
 	fmt.Printf("session: %+v\n", session)
 

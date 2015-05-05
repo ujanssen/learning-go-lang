@@ -107,8 +107,8 @@ func (client *XenAPIClient) login_with_password(uname string, pwd string, versio
 	//	params[3] = originator
 
 	params := make([]interface{}, 2)
-	params[0] = client.Username
-	params[1] = client.Password
+	params[0] = uname
+	params[1] = pwd
 
 	err = client.RPCCall(&result, "session.login_with_password", params)
 	resultValue = result["Value"]
@@ -151,7 +151,7 @@ func main() {
 	fmt.Println("NewXenAPIClient for: " + client.Host)
 	fmt.Println("login_with_password: " + user + "/" + passwd)
 
-	session, err := client.login_with_password(XS_USER, XS_PASSWD, "", "")
+	session, err := client.login_with_password(user, passwd, "", "")
 	fmt.Printf("err: %v\n", err)
 	fmt.Printf("session: %+v\n", session)
 
