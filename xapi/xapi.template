@@ -14,7 +14,7 @@ import (
 // {{ .Description }}
 //
 // params:{{range .Params }}
-// - {{.Name}}, {{.Type}}, {{.Doc}}{{end}}
+// - {{.Name}}, {{.Type.RawString}}, {{.Doc}}{{end}}
 //
 // returns:{{range .Result }}
 // - {{.}}{{end}}

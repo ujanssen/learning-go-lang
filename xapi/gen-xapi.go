@@ -79,6 +79,10 @@ func (name XapiTypeName) String() string {
 	return "interface{}"
 }
 
+func (name XapiTypeName) RawString() string {
+	return string(name)
+}
+
 func (name XapiDescr) String() string {
 	s := string(name)
 	s = strings.Replace(s, "\n", "\n// ", -1)
