@@ -65,11 +65,8 @@ func (name XapiTypeName) String() string {
 		return s
 	}
 	s = strings.Replace(s, " ", "_", -1)
-	s = strings.Replace(s, "(", "", -1)
-	s = strings.Replace(s, ")", "", -1)
-	s = strings.Replace(s, "->", "", -1)
 
-	if s == "string__string_map" {
+	if s == "(string_->_string)_map" {
 		return "map[string]string"
 	}
 
