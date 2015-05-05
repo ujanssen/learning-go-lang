@@ -9,7 +9,7 @@ import (
 	"text/template"
 )
 
-type XapiTypes struct {
+type Xapi struct {
 	XapiObjects []XapiType
 }
 
@@ -82,15 +82,15 @@ func main() {
 		fmt.Printf("File error: %v\n", e)
 		os.Exit(1)
 	}
-	var types XapiTypes
-	json.Unmarshal(file, &types)
+	var xapi Xapi
+	json.Unmarshal(file, &xapi)
 
 	t, err := template.New("xapi.template").ParseFiles("xapi.template")
 	if err != nil {
 		fmt.Printf("execution failed: %s\n", err)
 	}
 
-	err = t.ExecuteTemplate(os.Stdout, "xapi.template", types)
+	err = t.ExecuteTemplate(os.Stdout, "xapi.template", xapi)
 	if err != nil {
 		fmt.Printf("execution failed: %s\n", err)
 	}
