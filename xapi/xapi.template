@@ -91,13 +91,13 @@ type {{ .Name }} struct {
 func (client *XenAPIClient) {{ .Name }}({{range .Params}}{{ .Name }} {{ .Type }},{{end}})  (resultValue interface{}, err error){
 	result := xmlrpc.Struct{}
 
-//	params := make([]interface{}, {{ $message.ParamsLen }})
-//	{{range $index, $element := .Params }}
-//	params[{{$index}}] = {{$element.Name}}{{end}}
+    params := make([]interface{}, {{ $message.ParamsLen }})
+    {{range $index, $element := .Params }}
+    params[{{$index}}] = {{$element.Name}}{{end}}
 
-	params := make([]interface{}, 2)
-	params[0] = client.Username
-	params[1] = client.Password
+//	params := make([]interface{}, 2)
+//	params[0] = client.Username
+//	params[1] = client.Password
 
 	err = client.RPCCall(&result, "session.login_with_password", params)
 	resultValue = result["Value"]

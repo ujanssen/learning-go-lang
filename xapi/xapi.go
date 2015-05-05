@@ -99,16 +99,16 @@ type Session struct {
 func (client *XenAPIClient) login_with_password(uname string, pwd string, version string, originator string) (resultValue interface{}, err error) {
 	result := xmlrpc.Struct{}
 
-	//	params := make([]interface{}, 4)
-	//
-	//	params[0] = uname
-	//	params[1] = pwd
-	//	params[2] = version
-	//	params[3] = originator
+	params := make([]interface{}, 4)
 
-	params := make([]interface{}, 2)
 	params[0] = uname
 	params[1] = pwd
+	params[2] = version
+	params[3] = originator
+
+	//	params := make([]interface{}, 2)
+	//	params[0] = client.Username
+	//	params[1] = client.Password
 
 	err = client.RPCCall(&result, "session.login_with_password", params)
 	resultValue = result["Value"]
