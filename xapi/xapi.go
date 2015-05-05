@@ -43,39 +43,6 @@ func (c *XenAPIClient) RPCCall(result interface{}, method string, params []inter
 	return err
 }
 
-func (client *XenAPIClient) APICall(result *APIResult, method string, params ...interface{}) (err error) {
-	if client.Session == nil {
-		return fmt.Errorf("No session. Unable to make call")
-	}
-
-	//Make a params slice which will include the session
-	p := make([]interface{}, len(params)+1)
-	p[0] = client.Session
-
-	if params != nil {
-		for idx, element := range params {
-			p[idx+1] = element
-		}
-	}
-
-	res := xmlrpc.Struct{}
-
-	err = client.RPCCall(&res, method, p)
-
-	if err != nil {
-		return err
-	}
-
-	result.Status = res["Status"].(string)
-
-	if result.Status != "Success" {
-		return fmt.Errorf("API Error: %s", res["ErrorDescription"])
-	} else {
-		result.Value = res["Value"]
-	}
-	return
-}
-
 // A session
 
 func (client *XenAPIClient) session_logout_subject_identifier(session_id interface{}, subject_identifier string) (resultValue interface{}, err error) {
@@ -19373,6 +19340,10 @@ func main() {
 	vms, err := client.VM_get_all(session)
 	fmt.Printf("err: %v\n", err)
 	fmt.Printf("vms: %+v\n", vms)
+
+	res, err := client.session_local_logout(session)
+	fmt.Printf("err: %v\n", err)
+	fmt.Printf("res: %+v\n", res)
 
 	//    client.Username=user
 	//    client.Password=passwd
