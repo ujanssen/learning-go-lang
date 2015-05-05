@@ -34,6 +34,28 @@ type XenAPIObject struct {
 	Client *XenAPIClient
 }
 
+func (c *XenAPIClient) RPCCall(method string, argi ...interface{}) (resultValue interface{}, err error) {
+
+    params := make([]interface{}, len(argi))
+    for i, element := range argi {
+        params[i] = element
+    }
+
+    xmlrpcParams := new(xmlrpc.Params)
+    xmlrpcParams.Params = params
+
+    result := xmlrpc.Struct{}
+
+    err = c.RPC.Call(method, *xmlrpcParams, &result)
+
+    if err != nil {
+        fmt.Errorf("RPC Call Error: %s", err)
+    } else {
+        resultValue = result["Value"]
+    }
+    return resultValue, err
+}
+/*
 func (c *XenAPIClient) RPCCall(method string, params []interface{}) (resultValue interface{}, err error) {
     result := xmlrpc.Struct{}
     p := new(xmlrpc.Params)
@@ -46,18 +68,14 @@ func (c *XenAPIClient) RPCCall(method string, params []interface{}) (resultValue
     }
     return resultValue, err
 }
-
+*/
 {{range .XapiObjects}}
 {{ $objectName := .Name }}
 // {{ .Description }}
 {{range .Messages}}
 {{ $message := . }}
 func (client *XenAPIClient) {{$objectName}}_{{.Name}}({{range .Params}}{{.Name}} {{ .Type }},{{end}})  (resultValue interface{}, err error){
-    params := make([]interface{}, {{ $message.ParamsLen }})
-    {{range $index, $element := .Params }}
-    params[{{$index}}] = {{$element.Name}}{{end}}
-
-	return client.RPCCall("{{$objectName}}.{{.Name}}", params)
+	return client.RPCCall("{{$objectName}}.{{.Name}}", {{range .Params }}{{.Name}},{{end}})
 }
 {{end}}{{end}}
 
