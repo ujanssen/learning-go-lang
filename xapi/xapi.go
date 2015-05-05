@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/nilshell/xmlrpc"
+	"os"
 )
 
 type XenAPIClient struct {
@@ -13,6 +14,12 @@ type XenAPIClient struct {
 	Username string
 	Password string
 	RPC      *xmlrpc.Client
+}
+
+func NewXenAPIClient(host string) (client XenAPIClient) {
+	client.Url = "http://" + host
+	client.RPC, _ = xmlrpc.NewClient(client.Url, nil)
+	return
 }
 
 type APIResult struct {
@@ -85,7 +92,7 @@ type Session struct {
 	Originator       string
 }
 
-func (Session *Session) login_with_password(uname string, pwd string, version string, originator string) (err error) {
+func (client *XenAPIClient) login_with_password(uname string, pwd string, version string, originator string) (err error) {
 	result := xmlrpc.Struct{}
 
 	params := make([]interface{}, 4)
@@ -96,6 +103,8 @@ func (Session *Session) login_with_password(uname string, pwd string, version st
 	params[3] = originator
 
 	err = client.RPCCall(&result, "session.login_with_password", params)
+
+	return err
 }
 
 func (client *XenAPIClient) Login() (err error) {
@@ -117,6 +126,18 @@ func (client *XenAPIClient) Login() (err error) {
 	return err
 }
 
+const (
+	XS_HOST   = "XS_HOST"
+	XS_USER   = "XS_USER"
+	XS_PASSWD = "XS_PASSWD"
+)
+
 func main() {
 	fmt.Println("it compiles")
+	host, user, passwd := os.Getenv(XS_HOST), os.Getenv(XS_USER), os.Getenv(XS_PASSWD)
+	client := NewXenAPIClient(host)
+	fmt.Println("NewXenAPIClient for: " + client.Host)
+	fmt.Println("login_with_password: " + user + "/" + passwd)
+	err := client.login_with_password(XS_USER, XS_PASSWD, "", "")
+	fmt.Printf("err: %v\n", err)
 }
