@@ -39,6 +39,7 @@ func (c *XenAPIClient) RPCCall(result interface{}, method string, params []inter
 	p := new(xmlrpc.Params)
 	p.Params = params
 	err = c.RPC.Call(method, *p, result)
+	if err!=nil {fmt.Errorf("RPC Call Error: %s", err)}
 	return err
 }
 
@@ -87,16 +88,21 @@ type {{ .Name }} struct {
 {{range .Messages}}
 {{ $message := . }}
 {{if eq .Name "login_with_password" }}
-func (client *XenAPIClient) {{ .Name }}({{range .Params}}{{ .Name }} {{ .Type }},{{end}}) (err error){
+func (client *XenAPIClient) {{ .Name }}({{range .Params}}{{ .Name }} {{ .Type }},{{end}})  (resultValue interface{}, err error){
 	result := xmlrpc.Struct{}
 
-	params := make([]interface{}, {{ $message.ParamsLen }})
-	{{range $index, $element := .Params }}
-	params[{{$index}}] = {{$element.Name}}{{end}}
+//	params := make([]interface{}, {{ $message.ParamsLen }})
+//	{{range $index, $element := .Params }}
+//	params[{{$index}}] = {{$element.Name}}{{end}}
+
+	params := make([]interface{}, 2)
+	params[0] = client.Username
+	params[1] = client.Password
 
 	err = client.RPCCall(&result, "session.login_with_password", params)
+	resultValue = result["Value"]
 
-	return err
+	return resultValue, err
 }
 {{end}}{{end}}{{end}}{{end}}
 
@@ -129,8 +135,17 @@ func main() {
 	fmt.Println("it compiles")
 	host, user, passwd := os.Getenv(XS_HOST), os.Getenv(XS_USER), os.Getenv(XS_PASSWD)
 	client := NewXenAPIClient(host)
+	client.Username=user
+	client.Password=passwd
+
 	fmt.Println("NewXenAPIClient for: " + client.Host)
 	fmt.Println("login_with_password: " + user + "/" + passwd)
-	err := client.login_with_password(XS_USER, XS_PASSWD, "", "")
+
+	session, err := client.login_with_password(XS_USER, XS_PASSWD, "", "")
 	fmt.Printf("err: %v\n", err)
+	fmt.Printf("session: %+v\n", session)
+
+	err = client.Login()
+	fmt.Printf("err: %v\n", err)
+	fmt.Printf("session: %+v\n", client.Session)
 }
