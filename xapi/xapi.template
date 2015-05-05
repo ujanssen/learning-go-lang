@@ -82,8 +82,8 @@ func ({{ $xtype }} *{{ $xtype }}) {{ .Name }}({{range .Params}}{{ .Name }} {{ .T
 	result := xmlrpc.Struct{}
 
 	params := make([]interface{}, {{ $message.ParamsLen }})
-	params[0] = client.Username
-	params[1] = client.Password
+	{{range $index, $element := .Params }}
+	params[{{$index}}] = {{$element.Name}}{{end}}
 
 	err = client.RPCCall(&result, "session.login_with_password", params)
 }

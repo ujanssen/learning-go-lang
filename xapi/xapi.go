@@ -89,8 +89,11 @@ func (Session *Session) login_with_password(uname string, pwd string, version st
 	result := xmlrpc.Struct{}
 
 	params := make([]interface{}, 4)
-	params[0] = client.Username
-	params[1] = client.Password
+
+	params[0] = uname
+	params[1] = pwd
+	params[2] = version
+	params[3] = originator
 
 	err = client.RPCCall(&result, "session.login_with_password", params)
 }
