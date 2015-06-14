@@ -71,11 +71,16 @@ func (name XapiTypeName) String() string {
 	if s == "string" || s == "bool" {
 		return s
 	}
+	if s == "session ref" {
+		return "XapiSessionRef"
+	}
+
 	s = strings.Replace(s, " ", "_", -1)
 
 	if s == "(string_->_string)_map" {
 		return "map[string]string"
 	}
+
 	return "interface{}"
 }
 

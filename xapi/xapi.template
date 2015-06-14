@@ -6,6 +6,8 @@ import (
 	"github.com/nilshell/xmlrpc"
 )
 
+type XapiSessionRef string
+
 {{range .XapiObjects}}
 {{ $objectName := .Name }}
 {{range .Messages}}
@@ -86,15 +88,17 @@ func main() {
     fmt.Println("login_with_password: " + user + "/" + passwd)
 
     session, err := client.session_login_with_password(user, passwd, "", "")
+    sessionStr := session.(string)
+    sessionId := XapiSessionRef (sessionStr)
     if err != nil {
         fmt.Printf("err: %v\n", err)
     }
 
-    vms, err := client.VM_get_all(session)
+    vms, err := client.VM_get_all(sessionId)
 
     // list running VMs
     for _, vm := range vms.([]interface{}) {
-        ps, err := client.VM_get_power_state(session, vm)
+        ps, err := client.VM_get_power_state(sessionId, vm)
         if err != nil {
             fmt.Printf("err: %v\n", err)
         }
@@ -103,7 +107,7 @@ func main() {
         }
     }
 
-    _, err = client.session_local_logout(session)
+    _, err = client.session_local_logout(sessionId)
     if err != nil {
         fmt.Printf("err: %v\n", err)
     }
