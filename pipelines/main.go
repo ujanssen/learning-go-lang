@@ -4,11 +4,11 @@ import (
 	"fmt"
 )
 
-func gen(nums ...int) <-chan int {
+func gen(num int) <-chan int {
 	out := make(chan int)
 	go func() {
-		for _, n := range nums {
-			out <- n
+		for i := 1; i <= num; i++ {
+			out <- i
 		}
 		close(out)
 	}()
@@ -28,10 +28,11 @@ func sq(in <-chan int) <-chan int {
 
 func main() {
 	// Set up the pipeline.
-	c := gen(2, 3)
+	c := gen(10000)
 	out := sq(c)
 
 	// Consume the output.
-	fmt.Println(<-out) // 4
-	fmt.Println(<-out) // 9
+	for n := range out {
+		fmt.Println(n) // 1,4,9...
+	}
 }
