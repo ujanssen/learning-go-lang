@@ -55,12 +55,14 @@ func merge(cs ...<-chan int) <-chan int {
 
 func main() {
 	// Set up the pipeline.
-	in := gen(10000)
+	in := gen(1000 * 1000 * 1000 * 1000 * 1000 * 1000)
 	c1 := sq(in)
 	c2 := sq(in)
+	c3 := sq(in)
+	c4 := sq(in)
 
 	// Consume the output.
-	for n := range merge(c1, c2) {
+	for n := range merge(c1, c2, c3, c4) {
 		fmt.Println(n) // 1,4,9...
 	}
 }
