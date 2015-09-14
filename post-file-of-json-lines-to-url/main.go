@@ -11,10 +11,11 @@ import (
 
 // read a file line by line and send each line to the channel
 func readFile(fileName *string, jsonData chan string) {
-	file, err := os.Open(*fileName)
 	log.Println("Open File ", *fileName)
+
+	file, err := os.Open(*fileName)
+
 	defer file.Close()
-	defer close(jsonData)
 
 	if err != nil {
 		log.Fatal(err)
@@ -27,9 +28,10 @@ func readFile(fileName *string, jsonData chan string) {
 			jsonData <- line
 		} else {
 			log.Println("got err: ", err.Error())
-			return
+			break
 		}
 	}
+	close(jsonData)
 }
 
 // read json data from channel and post it to a given url
@@ -38,11 +40,12 @@ func sendJSONData(url *string, jsonData chan string) {
 		log.Println("send line: ", s)
 		reader := strings.NewReader(s)
 		resp, err := http.Post(*url, "application/json", reader)
+		resp.Body.Close()
 		if err == nil {
 			log.Printf("resp: %+v\n", resp)
 		} else {
 			log.Println("got err: ", err.Error())
-			return
+			break
 		}
 	}
 }
