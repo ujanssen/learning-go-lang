@@ -1,0 +1,14 @@
+Why go?
+21 Okt 2015
+
+Uwe Janßen
+
+* "Hello World" in go
+
+.play hello-world/hello-world.go
+
+* Test "Hello World"
+
+.play greet/greet.go
+
+.play greet/greet_test.go
