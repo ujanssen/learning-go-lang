@@ -3,7 +3,7 @@ package main
 
 import "testing"
 
-func Test(t *testing.T) {
+func TestGreet(t *testing.T) {
 	if got, want := greet(), "Hello World!"; got != want {
 		t.Fatal(got, want)
 	}
