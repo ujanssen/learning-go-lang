@@ -1,0 +1,25 @@
+Why go?
+21 Okt 2015
+
+Uwe Janßen
+
+* "Hello World" in go
+
+.play hello-world/hello-world.go
+
+  $ cd hello-world
+  $ go run hello-world.go
+  Hello World!
+
+* Testable "Hello World"
+
+.play greet/greet.go
+
+* Test "Hello World"
+
+.code greet/greet_test.go
+
+  $ cd greet
+  $ go test
+  PASS
+  ok  	github.com/ujanssen/learning-go-lang/present/greet	0.005s
