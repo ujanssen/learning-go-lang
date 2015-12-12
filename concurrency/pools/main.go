@@ -26,15 +26,18 @@ func main() {
 	}
 
 	// read results
-	for a := 1; a <= *numTasks; a++ {
-		d := <-output
-		fmt.Println("task", d.id, "result", d.result)
+	for d := range output {
+		*numTasks--
+		fmt.Println("result: task", d.id, "result", d.result)
+		if *numTasks == 0 {
+			break
+		}
 	}
 }
 
 func doWork(id int, input <-chan task) {
 	for t := range input {
-		fmt.Println("worker", id, "processing task", t.id)
+		fmt.Println("doWork: worker", id, "processing task", t.id)
 		time.Sleep(time.Second)
 		t.result = t.id * 2
 		t.output <- t
