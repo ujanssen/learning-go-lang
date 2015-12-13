@@ -18,7 +18,6 @@ func main() {
 	for id := 1; id <= *numTasks; id++ {
 		input <- task{id: id, output: output}
 	}
-	close(input)
 
 	// create Worker
 	for w := 1; w <= *numWorker; w++ {
@@ -30,22 +29,29 @@ func main() {
 		*numTasks--
 		fmt.Println("result: task", d.id, "result", d.result)
 		if *numTasks == 0 {
+			close(input)
 			break
 		}
 	}
 }
 
-func doWork(id int, input <-chan task) {
+func doWork(id int, input chan task) {
 	for t := range input {
-		fmt.Println("doWork: worker", id, "processing task", t.id)
-		time.Sleep(time.Second)
-		t.result = t.id * 2
-		t.output <- t
+		fmt.Println("doWork: worker", id, "processing task", t.id, " state:", t.state)
+		time.Sleep(100 * time.Millisecond)
+		t.state++
+		if t.state < 10 {
+			input <- t
+		} else {
+			t.result = t.id * 2
+			t.output <- t
+		}
 	}
 }
 
 type task struct {
 	id     int
 	result int
+	state  int
 	output chan task
 }
