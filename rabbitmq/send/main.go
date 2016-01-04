@@ -33,16 +33,18 @@ func main() {
 	)
 	failOnError(err, "Failed to declare a queue")
 
-	body := "hello"
-	err = ch.Publish(
-		"",     // exchange
-		q.Name, // routing key
-		false,  // mandatory
-		false,  // immediate
-		amqp.Publishing{
-			ContentType: "text/plain",
-			Body:        []byte(body),
-		})
-	log.Printf(" [x] Sent %s", body)
-	failOnError(err, "Failed to publish a message")
+	for n := 1; n < 10000; n++ {
+		body := fmt.Sprintf("hello no %d", n)
+		err = ch.Publish(
+			"",     // exchange
+			q.Name, // routing key
+			false,  // mandatory
+			false,  // immediate
+			amqp.Publishing{
+				ContentType: "text/plain",
+				Body:        []byte(body),
+			})
+		log.Printf(" [x] Sent %s", body)
+		failOnError(err, "Failed to publish a message")
+	}
 }
