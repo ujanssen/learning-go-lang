@@ -12,16 +12,16 @@ func main() {
 	flag.Parse()
 
 	input := make(chan task, *numTasks)
-	output := make(chan task, *numTasks)
+	output := make(chan task)
 
 	// create tasks
 	for id := 1; id <= *numTasks; id++ {
-		input <- task{id: id, output: output}
+		input <- task{id: id}
 	}
 
 	// create Worker
 	for w := 1; w <= *numWorker; w++ {
-		go doWork(w, input)
+		go doWork(w, input, output)
 	}
 
 	// read results
@@ -35,7 +35,7 @@ func main() {
 	}
 }
 
-func doWork(id int, input chan task) {
+func doWork(id int, input, output chan task) {
 	for t := range input {
 		fmt.Println("doWork: worker", id, "processing task", t.id, " state:", t.state)
 		time.Sleep(100 * time.Millisecond)
@@ -44,7 +44,7 @@ func doWork(id int, input chan task) {
 			input <- t
 		} else {
 			t.result = t.id * 2
-			t.output <- t
+			output <- t
 		}
 	}
 }
@@ -53,5 +53,4 @@ type task struct {
 	id     int
 	result int
 	state  int
-	output chan task
 }
