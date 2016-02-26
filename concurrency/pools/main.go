@@ -24,6 +24,14 @@ func main() {
 		go doWork(w, input, output)
 	}
 
+	// input queue len logger
+	go func() {
+		for {
+			time.Sleep(100 * time.Millisecond)
+			fmt.Println("input len:", len(input))
+		}
+	}()
+
 	// read results
 	for d := range output {
 		*numTasks--

@@ -1,15 +1,17 @@
 package task
 
 import (
-	"mandel"
-	"pngimage"
+	"github.com/ujanssen/learning-go-lang/mandel"
+	"github.com/ujanssen/learning-go-lang/pngimage"
 )
 
+// IterateTask with x,z,re and img
 type IterateTask struct {
 	X, Y     int
 	CRe, CIm float64
 }
 
+// IterateTasks generator
 func IterateTasks(d *mandel.Data, pi *pngimage.Pngimage) chan IterateTask {
 	b := pi.Img.Bounds()
 	input := make(chan IterateTask, b.Max.Y*b.Max.X)
