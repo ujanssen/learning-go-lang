@@ -1,18 +1,20 @@
 package fibonacci
 
-var f [61]int
-
-func Fib(n int) int {
-	if n == 1 || n == 2 {
-		return 1
+// Fib returns the fibonacci numbers per recursion
+func Fib(n uint64) uint64 {
+	if n < 2 {
+		return n
 	}
 	return Fib(n-2) + Fib(n-1)
 }
 
-func Mfib(n int) int {
-	if n == 1 || n == 2 {
-		f[n] = 1
-		return 1
+var f [250]uint64
+
+// Mfib returns the fibonacci numbers per recursion with Memory
+func Mfib(n uint64) uint64 {
+	if n < 2 {
+		f[n] = n
+		return n
 	}
 	if f[n] == 0 {
 		f[n] = Mfib(n-1) + Mfib(n-2)
@@ -20,24 +22,48 @@ func Mfib(n int) int {
 	return f[n-1] + f[n-2]
 }
 
+var lookup = []uint64{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610,
+	987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393,
+	196418, 317811, 514229, 832040, 1346269, 2178309, 3524578, 5702887, 9227465,
+	14930352, 24157817, 39088169, 63245986, 102334155, 165580141, 267914296,
+	433494437, 701408733, 1134903170, 1836311903, 2971215073, 4807526976,
+	7778742049, 12586269025, 20365011074, 32951280099, 53316291173, 86267571272,
+	139583862445, 225851433717, 365435296162, 591286729879, 956722026041,
+	1548008755920, 2504730781961, 4052739537881, 6557470319842, 10610209857723,
+	17167680177565, 27777890035288, 44945570212853, 72723460248141,
+	117669030460994, 190392490709135, 308061521170129, 498454011879264,
+	806515533049393, 1304969544928657, 2111485077978050, 3416454622906707,
+	5527939700884757, 8944394323791464, 14472334024676221, 23416728348467685,
+	37889062373143906, 61305790721611591, 99194853094755497, 160500643816367088,
+	259695496911122585, 420196140727489673, 679891637638612258,
+	1100087778366101931, 1779979416004714189, 2880067194370816120,
+	4660046610375530309, 7540113804746346429}
+
+// Lfib return the fibunacci nukmbers from lookup
+func Lfib(n uint64) uint64 {
+	if n < uint64(len(lookup)) {
+		return lookup[n]
+	}
+	return Lfib(n-2) + Lfib(n-1)
+}
+
 /*
 
-$ go test -bench=. src/fibonacci/fibonacci_test.go
+broadwell:bench ujanssen$ go test -bench=.
 PASS
-BenchmarkFib10	 5000000	       330 ns/op
-BenchmarkFib15	  500000	      3684 ns/op
-BenchmarkFib20	   50000	     40786 ns/op
-BenchmarkFib25	    5000	    450551 ns/op
-BenchmarkFib30	     500	   5043135 ns/op
-BenchmarkFib35	      50	  55598520 ns/op
-BenchmarkFib40	       2	 618482580 ns/op
-BenchmarkMfib10	500000000	         5.68 ns/op
-BenchmarkMfib15	500000000	         5.68 ns/op
-BenchmarkMfib20	500000000	         5.66 ns/op
-BenchmarkMfib25	500000000	         5.72 ns/op
-BenchmarkMfib30	500000000	         5.63 ns/op
-BenchmarkMfib35	500000000	         5.66 ns/op
-BenchmarkMfib40	500000000	         5.65 ns/op
-ok  	command-line-arguments	40.218s
+BenchmarkFib10-4        10000000               214 ns/op
+BenchmarkFib20-4           50000             27067 ns/op
+BenchmarkFib30-4             500           3326137 ns/op
+BenchmarkFib40-4               3         411266604 ns/op
+
+BenchmarkMfib10-4       500000000                3.89 ns/op
+BenchmarkMfib20-4       500000000                3.86 ns/op
+BenchmarkMfib30-4       300000000                3.87 ns/op
+BenchmarkMfib40-4       500000000                3.94 ns/op
+
+BenchmarkLfib10-4       300000000                3.91 ns/op
+BenchmarkLfib20-4       500000000                3.88 ns/op
+BenchmarkLfib30-4       500000000                3.87 ns/op
+BenchmarkLfib40-4       500000000                3.87 ns/op
 
 */

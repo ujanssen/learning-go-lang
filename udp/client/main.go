@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
-	"time"
+	"os"
 )
 
 func main() {
@@ -14,21 +14,21 @@ func main() {
 	checkError(err)
 
 	defer conn.Close()
-	i := 0
+	msg := ""
 	for {
-		msg := fmt.Sprintf("A%d", i)
-		i++
 		buf := []byte(msg)
 		_, err := conn.Write(buf)
-		fmt.Printf("Send %s %v to %s\n", msg, buf, server)
-
 		checkError(err)
-		time.Sleep(time.Second * 1)
+
+		fmt.Printf("Send %d bytes to %s\n", len(msg), server)
+
+		msg += "X"
 	}
 }
 
 func checkError(err error) {
 	if err != nil {
 		fmt.Println("Error: ", err)
+		os.Exit(0)
 	}
 }

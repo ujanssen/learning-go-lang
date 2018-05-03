@@ -7,20 +7,42 @@ import (
 )
 
 func main() {
-	server, err := net.ResolveUDPAddr("udp", ":6000")
+	clientInput, err := net.ResolveUDPAddr("udp", ":6000")
 	checkError(err)
 
-	conn, err := net.ListenUDP("udp", server)
+	serverOutput, err := net.ResolveUDPAddr("udp", ":8000")
 	checkError(err)
-	defer conn.Close()
 
-	buf := make([]byte, 1024)
+	server, err := net.DialUDP("udp", nil, serverOutput)
+	checkError(err)
 
-	for {
-		n, addr, err := conn.ReadFromUDP(buf)
-		checkError(err)
-		fmt.Printf("Received %s %v from %s\n", string(buf[0:n]), buf[0:n], addr)
-	}
+	client, err := net.ListenUDP("udp", clientInput)
+	checkError(err)
+
+	sclient, err := net.ListenUDP("udp", serverOutput)
+	checkError(err)
+
+	go func() {
+		for {
+			buf := make([]byte, 9*1024)
+			n, addr, err := client.ReadFromUDP(buf)
+			checkError(err)
+			fmt.Printf("Received %d bytes from %s\n", n, addr)
+			fmt.Printf("%v\n", buf[:n])
+			server.Write(buf[:n])
+		}
+	}()
+	go func() {
+		for {
+			buf := make([]byte, 9*1024)
+			n, addr, err := sclient.ReadFromUDP(buf)
+			checkError(err)
+			fmt.Printf("Received %d bytes from %s\n", n, addr)
+			fmt.Printf("%v\n", buf[:n])
+		}
+	}()
+
+	select {}
 }
 
 func checkError(err error) {

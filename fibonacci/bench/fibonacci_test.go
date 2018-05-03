@@ -1,8 +1,9 @@
-package fibonacci
+package main
 
 import (
-	"fibonacci"
 	"testing"
+
+	"github.com/ujanssen/learning-go-lang/fibonacci"
 )
 
 /*
@@ -47,12 +48,6 @@ func TestFib50(t *testing.T) {
 	testFib(50, 12586269025, t)
 }
 
-/*
-
-go test -bench=. src/fibonacci/fibonacci_test.go
-
-*/
-
 func benchmarkFib(i int, b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		fibonacci.Fib(i)
@@ -74,3 +69,14 @@ func BenchmarkMfib10(b *testing.B) { benchmarkMfib(10, b) }
 func BenchmarkMfib20(b *testing.B) { benchmarkMfib(20, b) }
 func BenchmarkMfib30(b *testing.B) { benchmarkMfib(30, b) }
 func BenchmarkMfib40(b *testing.B) { benchmarkMfib(40, b) }
+
+func benchmarkLfib(i int, b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		fibonacci.Mfib(i)
+	}
+}
+
+func BenchmarkLfib10(b *testing.B) { benchmarkLfib(10, b) }
+func BenchmarkLfib20(b *testing.B) { benchmarkLfib(20, b) }
+func BenchmarkLfib30(b *testing.B) { benchmarkLfib(30, b) }
+func BenchmarkLfib40(b *testing.B) { benchmarkLfib(40, b) }

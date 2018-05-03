@@ -1,9 +1,10 @@
 package md5_test
 
 import (
-	"github.com/ujanssen/learning-go-lang/md5"
 	"io/ioutil"
 	"testing"
+
+	"github.com/ujanssen/learning-go-lang/md5"
 )
 
 func report(got, want string, t *testing.T) {
@@ -22,8 +23,8 @@ func testMd5(in, want string, t *testing.T) {
 	report(got, want, t)
 }
 
-func writeToFile(file, contents string) {
-	ioutil.WriteFile(file, []byte(contents), 0666)
+func writeToFile(file, s string) {
+	ioutil.WriteFile(file, []byte(s), 0666)
 }
 
 const text string = " jagt im komplett verwahrlosten Taxi quer durch Bayern"
